@@ -1,971 +1,1307 @@
-// Mobile Navigation Toggle
-document.addEventListener('DOMContentLoaded', function() {
-    // Mobile Navigation
-    const hamburger = document.querySelector('.hamburger');
-    const navMenu = document.querySelector('.nav-menu');
-    const navLinks = document.querySelectorAll('.nav-link');
+// ============================================
+// NUTSSPHERE E-COMMERCE - COMPLETE JAVASCRIPT
+// ============================================
 
-    // Toggle mobile menu
-    hamburger.addEventListener('click', function() {
-        hamburger.classList.toggle('active');
-        navMenu.classList.toggle('active');
-        
-        // Animate hamburger bars
-        const bars = hamburger.querySelectorAll('.bar');
-        if (hamburger.classList.contains('active')) {
-            bars[0].style.transform = 'rotate(-45deg) translate(-5px, 6px)';
-            bars[1].style.opacity = '0';
-            bars[2].style.transform = 'rotate(45deg) translate(-5px, -6px)';
-        } else {
-            bars[0].style.transform = 'none';
-            bars[1].style.opacity = '1';
-            bars[2].style.transform = 'none';
-        }
-    });
-
-    // Close mobile menu when clicking on a link
-    navLinks.forEach(link => {
-        link.addEventListener('click', function() {
-            hamburger.classList.remove('active');
-            navMenu.classList.remove('active');
-            
-            // Reset hamburger bars
-            const bars = hamburger.querySelectorAll('.bar');
-            bars[0].style.transform = 'none';
-            bars[1].style.opacity = '1';
-            bars[2].style.transform = 'none';
-        });
-    });
-
-    // Close mobile menu when clicking outside
-    document.addEventListener('click', function(e) {
-        if (!hamburger.contains(e.target) && !navMenu.contains(e.target)) {
-            hamburger.classList.remove('active');
-            navMenu.classList.remove('active');
-            
-            // Reset hamburger bars
-            const bars = hamburger.querySelectorAll('.bar');
-            bars[0].style.transform = 'none';
-            bars[1].style.opacity = '1';
-            bars[2].style.transform = 'none';
-        }
-    });
-
-    // Initialize animations
-    initAnimations();
-    initCounters();
-    initParallax();
-    initProductCards();
-});
-
-// Smooth scrolling for navigation links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            const headerOffset = 80;
-            const elementPosition = target.offsetTop;
-            const offsetPosition = elementPosition - headerOffset;
-
-            window.scrollTo({
-                top: offsetPosition,
-                behavior: 'smooth'
-            });
-        }
-    });
-});
-
-// Enhanced navbar background change on scroll
-window.addEventListener('scroll', function() {
-    const navbar = document.querySelector('.navbar');
-    const scrollY = window.scrollY;
-    
-    if (scrollY > 50) {
-        navbar.style.backgroundColor = 'rgba(255, 255, 255, 0.98)';
-        navbar.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.15)';
-        navbar.style.backdropFilter = 'blur(15px)';
-    } else {
-        navbar.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
-        navbar.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
-        navbar.style.backdropFilter = 'blur(10px)';
-    }
-});
-
-// Advanced Intersection Observer for animations
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
+// Global State Management
+const appState = {
+    user: null,
+    cart: [],
+    wishlist: [],
+    orders: [],
+    products: [],
+    currentCheckoutStep: 1,
+    shippingAddress: null,
+    paymentMethod: null
 };
 
-const observer = new IntersectionObserver(function(entries) {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            const element = entry.target;
+// Initialize App
+document.addEventListener('DOMContentLoaded', function() {
+    initializeApp();
+    loadProducts();
+    setupEventListeners();
+    checkAuth();
+    loadCart();
+    animateHero();
+});
+
+// Initialize Application
+function initializeApp() {
+    // Load from localStorage
+    const savedCart = localStorage.getItem('cart');
+    const savedUser = localStorage.getItem('user');
+    const savedOrders = localStorage.getItem('orders');
+    const savedWishlist = localStorage.getItem('wishlist');
+    
+    if (savedCart) appState.cart = JSON.parse(savedCart);
+    if (savedUser) appState.user = JSON.parse(savedUser);
+    if (savedOrders) appState.orders = JSON.parse(savedOrders);
+    if (savedWishlist) appState.wishlist = JSON.parse(savedWishlist);
+    
+    updateCartBadge();
+    updateAccountMenu();
+}
+
+// ====================
+// PRODUCTS SECTION
+// ====================
+
+// Product Data
+const productsData = [
+    {
+        id: 'pistachios',
+        name: 'Roasted Pistachios',
+        category: 'nuts',
+        description: 'Premium quality roasted pistachios, responsibly sourced and hygienically packed. Pure goodness in every bite.',
+        image: 'images/pistachos.jpg',
+        price: 899,
+        originalPrice: 999,
+        discount: 10,
+        variants: [
+            { size: '250g', price: 899 },
+            { size: '500g', price: 1699 },
+            { size: '1kg', price: 3199 }
+        ],
+        features: ['High Protein', 'Premium Quality'],
+        badges: ['Premium Quality', 'Roasted'],
+        inStock: true
+    },
+    {
+        id: 'almonds',
+        name: 'California Almonds',
+        category: 'nuts',
+        description: 'Premium California almonds, rich in nutrients and perfect for a healthy lifestyle. Naturally sweet and crunchy.',
+        image: 'images/almonds.jpg',
+        price: 749,
+        originalPrice: 849,
+        discount: 12,
+        variants: [
+            { size: '250g', price: 749 },
+            { size: '500g', price: 1399 },
+            { size: '1kg', price: 2699 }
+        ],
+        features: ['High Protein', 'Heart Healthy'],
+        badges: ['Premium Quality', 'California'],
+        inStock: true
+    },
+    {
+        id: 'black-raisins',
+        name: 'Black Raisins',
+        category: 'dried-fruits',
+        description: 'Natural sun-dried black raisins, rich in antioxidants and natural iron. Perfect for snacking or cooking.',
+        image: 'images/black_rasins.jpg',
+        price: 349,
+        originalPrice: 399,
+        discount: 13,
+        variants: [
+            { size: '250g', price: 349 },
+            { size: '500g', price: 649 },
+            { size: '1kg', price: 1199 }
+        ],
+        features: ['Antioxidants', 'Natural Iron'],
+        badges: ['Premium Quality', 'Natural'],
+        inStock: true
+    },
+    {
+        id: 'cashews',
+        name: 'Whole Cashews',
+        category: 'nuts',
+        description: 'Premium whole cashews, rich in healthy fats and essential minerals. Creamy texture and delicious taste.',
+        image: 'images/cashews.jpg',
+        price: 449,
+        originalPrice: 499,
+        discount: 10,
+        variants: [
+            { size: '250g', price: 449 },
+            { size: '500g', price: 849 },
+            { size: '1kg', price: 1599 }
+        ],
+        features: ['High Protein', 'Healthy Fats'],
+        badges: ['Premium Quality', 'Whole'],
+        inStock: true
+    },
+    {
+        id: 'walnuts',
+        name: 'Inshell Walnuts',
+        category: 'nuts',
+        description: 'Premium inshell walnuts, packed with Omega-3 fatty acids. Great for brain health and overall wellness.',
+        image: 'images/walnuts.jpg',
+        price: 399,
+        originalPrice: 449,
+        discount: 11,
+        variants: [
+            { size: '250g', price: 399 },
+            { size: '500g', price: 749 },
+            { size: '1kg', price: 1399 }
+        ],
+        features: ['Omega-3', 'Brain Health'],
+        badges: ['Premium Quality', 'Inshell'],
+        inStock: true
+    }
+];
+
+// Load and Display Products
+function loadProducts(filter = 'all') {
+    const productsGrid = document.getElementById('productsGrid');
+    if (!productsGrid) return;
+    
+    appState.products = productsData;
+    
+    const filtered = filter === 'all' 
+        ? productsData 
+        : productsData.filter(p => p.category === filter);
+    
+    productsGrid.innerHTML = filtered.map(product => createProductCard(product)).join('');
+}
+
+// Create Product Card HTML
+function createProductCard(product) {
+    const discount = Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100);
+    
+    return `
+        <div class="product-card" data-product-id="${product.id}">
+            <div class="product-image" onclick="showQuickView('${product.id}')">
+                <img src="${product.image}" alt="${product.name}" onerror="this.src='images/final_nutsphere_logo_01-removebg-preview.png'">
+                <div class="product-badges">
+                    ${product.badges.map(badge => `<span class="badge">${badge}</span>`).join('')}
+                </div>
+            </div>
+            <div class="product-content">
+                <h3 class="product-title">${product.name}</h3>
+                <p class="product-description">${product.description}</p>
+                <div class="product-price">
+                    <span class="current-price">₹${product.price}</span>
+                    <span class="original-price">₹${product.originalPrice}</span>
+                    <span class="discount">${discount}% OFF</span>
+                </div>
+                <div class="product-features">
+                    ${product.features.map(feature => `<span class="feature-tag">${feature}</span>`).join('')}
+                </div>
+                <div class="quantity-selector">
+                    <button class="qty-btn" onclick="decreaseProductQty('${product.id}')">-</button>
+                    <span class="qty-display" id="qty-${product.id}">1</span>
+                    <button class="qty-btn" onclick="increaseProductQty('${product.id}')">+</button>
+                </div>
+                <button class="add-to-cart-btn" onclick="addToCart('${product.id}')">
+                    <i class="fas fa-shopping-cart"></i>
+                    Add to Cart
+                </button>
+            </div>
+        </div>
+    `;
+}
+
+// Product Quantity Controls
+function increaseProductQty(productId) {
+    const qtyElement = document.getElementById(`qty-${productId}`);
+    const currentQty = parseInt(qtyElement.textContent);
+    qtyElement.textContent = currentQty + 1;
+}
+
+function decreaseProductQty(productId) {
+    const qtyElement = document.getElementById(`qty-${productId}`);
+    const currentQty = parseInt(qtyElement.textContent);
+    if (currentQty > 1) {
+        qtyElement.textContent = currentQty - 1;
+    }
+}
+
+// Product Filter
+function setupEventListeners() {
+    // Product Filter
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            filterBtns.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            const category = this.dataset.category;
+            loadProducts(category);
+        });
+    });
+    
+    // Mobile Menu Toggle
+    const hamburger = document.querySelector('.hamburger');
+    const navMenu = document.querySelector('.nav-menu');
+    
+    if (hamburger) {
+        hamburger.addEventListener('click', function() {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+    }
+    
+    // Auth Tabs
+    const authTabs = document.querySelectorAll('.auth-tab');
+    authTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            authTabs.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
             
-            // Add different animations based on element class
-            if (element.classList.contains('product-card')) {
-                element.style.opacity = '1';
-                element.style.transform = 'translateY(0) scale(1)';
-                element.style.animation = 'fadeInUp 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-            } else if (element.classList.contains('feature-card')) {
-                element.style.opacity = '1';
-                element.style.transform = 'translateY(0)';
-                element.style.animation = 'slideInLeft 0.8s ease-out';
-            } else if (element.classList.contains('testimonial-card')) {
-                element.style.opacity = '1';
-                element.style.transform = 'translateY(0)';
-                element.style.animation = 'slideInRight 0.8s ease-out';
-            } else {
-                element.style.opacity = '1';
-                element.style.transform = 'translateY(0)';
-            }
+            const tabName = this.dataset.tab;
+            document.querySelectorAll('.auth-form').forEach(form => {
+                form.classList.remove('active');
+            });
+            document.querySelector(`[data-form="${tabName}"]`).classList.add('active');
+        });
+    });
+    
+    // Dashboard Tabs
+    const dashboardMenuItems = document.querySelectorAll('.dashboard-menu li[data-tab]');
+    dashboardMenuItems.forEach(item => {
+        item.addEventListener('click', function() {
+            dashboardMenuItems.forEach(i => i.classList.remove('active'));
+            this.classList.add('active');
+            
+            const tabName = this.dataset.tab;
+            document.querySelectorAll('.dashboard-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.getElementById(`${tabName}Tab`).classList.add('active');
+        });
+    });
+    
+    // Form Submissions
+    setupFormHandlers();
+    
+    // Back to Top
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 300) {
+            backToTop.classList.add('active');
+        } else {
+            backToTop.classList.remove('active');
         }
     });
-}, observerOptions);
-
-// Initialize animations
-function initAnimations() {
-    const animateElements = document.querySelectorAll('.product-card, .feature-card, .testimonial-card, .about-item');
     
-    animateElements.forEach((el, index) => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(50px) scale(0.9)';
-        el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
-        
-        // Stagger animation delay
-        setTimeout(() => {
-            observer.observe(el);
-        }, index * 100);
+    if (backToTop) {
+        backToTop.addEventListener('click', function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+    
+    // Payment Method Selection
+    const paymentOptions = document.querySelectorAll('input[name="paymentMethod"]');
+    paymentOptions.forEach(option => {
+        option.addEventListener('change', function() {
+            handlePaymentMethodChange(this.value);
+        });
     });
 }
 
-// Animated counters for hero stats
-function initCounters() {
-    const counters = document.querySelectorAll('.stat-number');
-    const speed = 200; // Animation speed
+// ====================
+// SHOPPING CART
+// ====================
+
+// Add to Cart
+function addToCart(productId) {
+    const product = appState.products.find(p => p.id === productId);
+    if (!product) return;
     
-    counters.forEach(counter => {
-        const updateCount = () => {
-            const target = +counter.getAttribute('data-target');
-            const count = +counter.innerText;
-            const increment = target / speed;
-            
-            if (count < target) {
-                counter.innerText = Math.ceil(count + increment);
-                setTimeout(updateCount, 1);
-            } else {
-                counter.innerText = target;
-            }
+    const qtyElement = document.getElementById(`qty-${productId}`);
+    const quantity = qtyElement ? parseInt(qtyElement.textContent) : 1;
+    
+    const existingItem = appState.cart.find(item => item.id === productId);
+    
+    if (existingItem) {
+        existingItem.quantity += quantity;
+    } else {
+        appState.cart.push({
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            image: product.image,
+            quantity: quantity
+        });
+    }
+    
+    saveCart();
+    updateCartUI();
+    showToast(`${product.name} added to cart!`);
+    
+    // Reset quantity display
+    if (qtyElement) qtyElement.textContent = '1';
+}
+
+// Remove from Cart
+function removeFromCart(productId) {
+    appState.cart = appState.cart.filter(item => item.id !== productId);
+    saveCart();
+    updateCartUI();
+    showToast('Item removed from cart');
+}
+
+// Update Cart Item Quantity
+function updateCartItemQty(productId, change) {
+    const item = appState.cart.find(item => item.id === productId);
+    if (item) {
+        item.quantity += change;
+        if (item.quantity <= 0) {
+            removeFromCart(productId);
+        } else {
+            saveCart();
+            updateCartUI();
+        }
+    }
+}
+
+// Save Cart to LocalStorage
+function saveCart() {
+    localStorage.setItem('cart', JSON.stringify(appState.cart));
+    updateCartBadge();
+}
+
+// Load Cart from LocalStorage
+function loadCart() {
+    const savedCart = localStorage.getItem('cart');
+    if (savedCart) {
+        appState.cart = JSON.parse(savedCart);
+        updateCartBadge();
+    }
+}
+
+// Update Cart Badge
+function updateCartBadge() {
+    const badge = document.getElementById('cartBadge');
+    if (badge) {
+        const totalItems = appState.cart.reduce((sum, item) => sum + item.quantity, 0);
+        badge.textContent = totalItems;
+        badge.style.display = totalItems > 0 ? 'block' : 'none';
+    }
+}
+
+// Update Cart UI
+function updateCartUI() {
+    const cartItems = document.getElementById('cartItems');
+    const cartSubtotal = document.getElementById('cartSubtotal');
+    const cartTotal = document.getElementById('cartTotal');
+    
+    if (!cartItems) return;
+    
+    if (appState.cart.length === 0) {
+        cartItems.innerHTML = '<p style="text-align: center; color: #9E9E9E; padding: 2rem;">Your cart is empty</p>';
+        if (cartSubtotal) cartSubtotal.textContent = '₹0';
+        if (cartTotal) cartTotal.textContent = '₹0';
+        return;
+    }
+    
+    const subtotal = appState.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const shipping = subtotal >= 1000 ? 0 : 50;
+    const total = subtotal + shipping;
+    
+    cartItems.innerHTML = appState.cart.map(item => `
+        <div class="cart-item">
+            <div class="cart-item-image">
+                <img src="${item.image}" alt="${item.name}" onerror="this.src='images/final_nutsphere_logo_01-removebg-preview.png'">
+            </div>
+            <div class="cart-item-details">
+                <h4 class="cart-item-title">${item.name}</h4>
+                <p class="cart-item-price">₹${item.price}</p>
+                <div class="cart-item-actions">
+                    <div class="cart-item-qty">
+                        <button onclick="updateCartItemQty('${item.id}', -1)">-</button>
+                        <span>${item.quantity}</span>
+                        <button onclick="updateCartItemQty('${item.id}', 1)">+</button>
+                    </div>
+                    <button class="remove-cart-item" onclick="removeFromCart('${item.id}')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+    
+    if (cartSubtotal) cartSubtotal.textContent = `₹${subtotal}`;
+    if (cartTotal) cartTotal.textContent = `₹${total}`;
+    
+    const shippingElement = document.getElementById('cartShipping');
+    if (shippingElement) {
+        shippingElement.textContent = shipping === 0 ? 'FREE' : `₹${shipping}`;
+    }
+}
+
+// Toggle Cart Sidebar
+function toggleCart() {
+    const cartSidebar = document.getElementById('cartSidebar');
+    const cartOverlay = document.getElementById('cartOverlay');
+    
+    if (cartSidebar && cartOverlay) {
+        cartSidebar.classList.toggle('active');
+        cartOverlay.classList.toggle('active');
+        
+        if (cartSidebar.classList.contains('active')) {
+            updateCartUI();
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+    }
+}
+
+// ====================
+// CHECKOUT PROCESS
+// ====================
+
+// Proceed to Checkout
+function proceedToCheckout() {
+    if (appState.cart.length === 0) {
+        showToast('Your cart is empty!');
+        return;
+    }
+    
+    if (!appState.user) {
+        toggleCart();
+        showAuthModal();
+        showToast('Please login to continue');
+        return;
+    }
+    
+    toggleCart();
+    showCheckoutModal();
+    updateCheckoutSummary();
+}
+
+// Show Checkout Modal
+function showCheckoutModal() {
+    const modal = document.getElementById('checkoutModal');
+    if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        nextCheckoutStep(1);
+    }
+}
+
+// Close Checkout Modal
+function closeCheckoutModal() {
+    const modal = document.getElementById('checkoutModal');
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+}
+
+// Navigate Checkout Steps
+function nextCheckoutStep(step) {
+    if (step === 2 && !validateShippingForm()) {
+        return;
+    }
+    
+    if (step === 3 && !validatePaymentMethod()) {
+        return;
+    }
+    
+    appState.currentCheckoutStep = step;
+    
+    // Update step indicators
+    document.querySelectorAll('.step').forEach((stepEl, index) => {
+        if (index + 1 < step) {
+            stepEl.classList.add('completed');
+        } else if (index + 1 === step) {
+            stepEl.classList.add('active');
+        } else {
+            stepEl.classList.remove('active', 'completed');
+        }
+    });
+    
+    // Show appropriate step content
+    document.querySelectorAll('.checkout-step').forEach(stepContent => {
+        stepContent.classList.remove('active');
+    });
+    document.getElementById(`checkoutStep${step}`).classList.add('active');
+    
+    // Update review if on step 3
+    if (step === 3) {
+        updateOrderReview();
+    }
+}
+
+// Validate Shipping Form
+function validateShippingForm() {
+    const form = document.getElementById('shippingForm');
+    if (!form) return false;
+    
+    const requiredFields = form.querySelectorAll('[required]');
+    let isValid = true;
+    
+    requiredFields.forEach(field => {
+        if (!field.value.trim()) {
+            field.style.borderColor = '#F44336';
+            isValid = false;
+        } else {
+            field.style.borderColor = '';
+        }
+    });
+    
+    if (isValid) {
+        appState.shippingAddress = {
+            name: document.getElementById('shipName').value,
+            phone: document.getElementById('shipPhone').value,
+            address: document.getElementById('shipAddress').value,
+            city: document.getElementById('shipCity').value,
+            state: document.getElementById('shipState').value,
+            pincode: document.getElementById('shipPincode').value,
+            country: document.getElementById('shipCountry').value
+        };
+    } else {
+        showToast('Please fill all required fields');
+    }
+    
+    return isValid;
+}
+
+// Validate Payment Method
+function validatePaymentMethod() {
+    const selected = document.querySelector('input[name="paymentMethod"]:checked');
+    if (!selected) {
+        showToast('Please select a payment method');
+        return false;
+    }
+    
+    appState.paymentMethod = selected.value;
+    return true;
+}
+
+// Handle Payment Method Change
+function handlePaymentMethodChange(method) {
+    const paymentDetails = document.getElementById('paymentDetails');
+    if (!paymentDetails) return;
+    
+    let content = '';
+    
+    if (method === 'card') {
+        content = `
+            <div class="form-group">
+                <label>Card Number</label>
+                <input type="text" placeholder="1234 5678 9012 3456" required>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Expiry Date</label>
+                    <input type="text" placeholder="MM/YY" required>
+                </div>
+                <div class="form-group">
+                    <label>CVV</label>
+                    <input type="text" placeholder="123" required>
+                </div>
+            </div>
+        `;
+    } else if (method === 'upi') {
+        content = `
+            <div class="form-group">
+                <label>UPI ID</label>
+                <input type="text" placeholder="username@upi" required>
+            </div>
+        `;
+    } else if (method === 'netbanking') {
+        content = `
+            <div class="form-group">
+                <label>Select Bank</label>
+                <select required>
+                    <option value="">Choose your bank</option>
+                    <option value="sbi">State Bank of India</option>
+                    <option value="hdfc">HDFC Bank</option>
+                    <option value="icici">ICICI Bank</option>
+                    <option value="axis">Axis Bank</option>
+                </select>
+            </div>
+        `;
+    }
+    
+    paymentDetails.innerHTML = content;
+}
+
+// Update Checkout Summary
+function updateCheckoutSummary() {
+    const summaryItems = document.getElementById('checkoutSummaryItems');
+    const checkoutSubtotal = document.getElementById('checkoutSubtotal');
+    const checkoutShipping = document.getElementById('checkoutShipping');
+    const checkoutTotal = document.getElementById('checkoutTotal');
+    
+    if (!summaryItems) return;
+    
+    const subtotal = appState.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const shipping = subtotal >= 1000 ? 0 : 50;
+    const total = subtotal + shipping;
+    
+    summaryItems.innerHTML = appState.cart.map(item => `
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem; font-size: 0.9rem;">
+            <span>${item.name} x ${item.quantity}</span>
+            <span>₹${item.price * item.quantity}</span>
+        </div>
+    `).join('');
+    
+    if (checkoutSubtotal) checkoutSubtotal.textContent = `₹${subtotal}`;
+    if (checkoutShipping) checkoutShipping.textContent = shipping === 0 ? 'FREE' : `₹${shipping}`;
+    if (checkoutTotal) checkoutTotal.textContent = `₹${total}`;
+}
+
+// Update Order Review
+function updateOrderReview() {
+    const reviewShipping = document.getElementById('reviewShipping');
+    const reviewItems = document.getElementById('reviewItems');
+    const reviewPayment = document.getElementById('reviewPayment');
+    const reviewSubtotal = document.getElementById('reviewSubtotal');
+    const reviewShippingCost = document.getElementById('reviewShippingCost');
+    const reviewGrandTotal = document.getElementById('reviewGrandTotal');
+    
+    if (appState.shippingAddress && reviewShipping) {
+        const addr = appState.shippingAddress;
+        reviewShipping.innerHTML = `
+            <p><strong>${addr.name}</strong></p>
+            <p>${addr.phone}</p>
+            <p>${addr.address}</p>
+            <p>${addr.city}, ${addr.state} - ${addr.pincode}</p>
+            <p>${addr.country}</p>
+        `;
+    }
+    
+    if (reviewItems) {
+        reviewItems.innerHTML = appState.cart.map(item => `
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+                <span>${item.name} x ${item.quantity}</span>
+                <span>₹${item.price * item.quantity}</span>
+            </div>
+        `).join('');
+    }
+    
+    if (reviewPayment && appState.paymentMethod) {
+        const paymentMethods = {
+            'cod': 'Cash on Delivery',
+            'upi': 'UPI Payment',
+            'card': 'Credit/Debit Card',
+            'netbanking': 'Net Banking'
+        };
+        reviewPayment.textContent = paymentMethods[appState.paymentMethod] || appState.paymentMethod;
+    }
+    
+    const subtotal = appState.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const shipping = subtotal >= 1000 ? 0 : 50;
+    const total = subtotal + shipping;
+    
+    if (reviewSubtotal) reviewSubtotal.textContent = `₹${subtotal}`;
+    if (reviewShippingCost) reviewShippingCost.textContent = shipping === 0 ? 'FREE' : `₹${shipping}`;
+    if (reviewGrandTotal) reviewGrandTotal.textContent = `₹${total}`;
+}
+
+// Place Order
+function placeOrder() {
+    if (!appState.user) {
+        showToast('Please login to place order');
+        return;
+    }
+    
+    showLoading();
+    
+    // Simulate order processing
+    setTimeout(() => {
+        const orderId = 'ORD' + Date.now();
+        const orderDate = new Date().toISOString();
+        const subtotal = appState.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        const shipping = subtotal >= 1000 ? 0 : 50;
+        const total = subtotal + shipping;
+        
+        const order = {
+            id: orderId,
+            date: orderDate,
+            items: [...appState.cart],
+            shippingAddress: appState.shippingAddress,
+            paymentMethod: appState.paymentMethod,
+            subtotal: subtotal,
+            shipping: shipping,
+            total: total,
+            status: 'pending'
         };
         
-        // Start counter animation when element is in view
-        const counterObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    updateCount();
-                    counterObserver.unobserve(entry.target);
-                }
-            });
-        });
+        appState.orders.push(order);
+        localStorage.setItem('orders', JSON.stringify(appState.orders));
         
-        counterObserver.observe(counter);
-    });
-}
-
-// Enhanced parallax effects
-function initParallax() {
-    window.addEventListener('scroll', () => {
-        const scrolled = window.pageYOffset;
+        // Clear cart
+        appState.cart = [];
+        saveCart();
+        updateCartUI();
         
-        // Hero parallax
-        const heroImage = document.querySelector('.hero-image');
-        if (heroImage) {
-            const speed = scrolled * 0.3;
-            heroImage.style.transform = `translateY(${speed}px)`;
-        }
+        hideLoading();
+        closeCheckoutModal();
         
-        // Floating nuts parallax
-        const floatingNuts = document.querySelectorAll('.floating-nut');
-        floatingNuts.forEach((nut, index) => {
-            const speed = (scrolled * (0.1 + index * 0.05));
-            nut.style.transform = `translateY(${speed}px) rotate(${scrolled * 0.1}deg)`;
-        });
+        showToast('Order placed successfully! Order ID: ' + orderId);
         
-        // Particles parallax
-        const particles = document.querySelector('.hero-particles');
-        if (particles) {
-            const speed = scrolled * 0.2;
-            particles.style.transform = `translateY(${speed}px)`;
-        }
-    });
-}
-
-// Enhanced product card interactions
-function initProductCards() {
-    const productCards = document.querySelectorAll('.product-card');
-    
-    productCards.forEach(card => {
-        // Enhanced hover effects
-        card.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-15px) scale(1.02)';
-            this.style.boxShadow = '0 25px 60px rgba(76, 175, 80, 0.2)';
-            
-            // Animate badges
-            const badges = this.querySelectorAll('.badge');
-            badges.forEach((badge, index) => {
-                setTimeout(() => {
-                    badge.style.opacity = '1';
-                    badge.style.transform = 'translateX(0) scale(1.1)';
-                }, index * 100);
-            });
-            
-            // Animate feature tags
-            const tags = this.querySelectorAll('.feature-tag');
-            tags.forEach((tag, index) => {
-                setTimeout(() => {
-                    tag.style.background = 'var(--primary-green)';
-                    tag.style.color = 'white';
-                    tag.style.transform = 'scale(1.05)';
-                }, index * 50);
-            });
-        });
-        
-        card.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0) scale(1)';
-            this.style.boxShadow = '0 10px 40px rgba(0, 0, 0, 0.1)';
-            
-            // Reset badges
-            const badges = this.querySelectorAll('.badge');
-            badges.forEach(badge => {
-                badge.style.opacity = '0';
-                badge.style.transform = 'translateX(30px) scale(1)';
-            });
-            
-            // Reset feature tags
-            const tags = this.querySelectorAll('.feature-tag');
-            tags.forEach(tag => {
-                tag.style.background = 'var(--light-beige)';
-                tag.style.color = 'var(--brown)';
-                tag.style.transform = 'scale(1)';
-            });
-        });
-        
-        // Click effect with ripple
-        card.addEventListener('click', function(e) {
-            const ripple = document.createElement('div');
-            const rect = this.getBoundingClientRect();
-            const size = Math.max(rect.width, rect.height);
-            const x = e.clientX - rect.left - size / 2;
-            const y = e.clientY - rect.top - size / 2;
-            
-            ripple.style.cssText = `
-                position: absolute;
-                width: ${size}px;
-                height: ${size}px;
-                left: ${x}px;
-                top: ${y}px;
-                background: rgba(76, 175, 80, 0.3);
-                border-radius: 50%;
-                transform: scale(0);
-                animation: ripple 0.8s ease-out;
-                pointer-events: none;
-                z-index: 1;
-            `;
-            
-            this.style.position = 'relative';
-            this.style.overflow = 'hidden';
-            this.appendChild(ripple);
-            
-            setTimeout(() => {
-                ripple.remove();
-            }, 800);
-        });
-    });
-}
-
-// Scroll indicator click handler
-document.addEventListener('DOMContentLoaded', function() {
-    const scrollIndicator = document.querySelector('.scroll-indicator');
-    if (scrollIndicator) {
-        scrollIndicator.addEventListener('click', function() {
-            document.querySelector('#about').scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
-        });
-    }
-});
-
-// Contact Form Handling with enhanced validation
-document.querySelector('.contact-form').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    // Get form data
-    const formData = new FormData(this);
-    const name = formData.get('name').trim();
-    const email = formData.get('email').trim();
-    const message = formData.get('message').trim();
-    
-    // Enhanced validation
-    if (!name || name.length < 2) {
-        showNotification('Please enter a valid name (at least 2 characters).', 'error');
-        return;
-    }
-    
-    if (!email || !isValidEmail(email)) {
-        showNotification('Please enter a valid email address.', 'error');
-        return;
-    }
-    
-    if (!message || message.length < 10) {
-        showNotification('Please enter a message (at least 10 characters).', 'error');
-        return;
-    }
-    
-    // Show loading state
-    const submitBtn = this.querySelector('.btn');
-    const originalText = submitBtn.innerHTML;
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
-    submitBtn.disabled = true;
-    
-    // Simulate form submission (replace with actual form submission logic)
-    setTimeout(() => {
-        showNotification('Thank you for your message! We\'ll get back to you within 24 hours.', 'success');
-        this.reset();
-        
-        // Reset button
-        submitBtn.innerHTML = originalText;
-        submitBtn.disabled = false;
-        
-        // Add success animation
-        submitBtn.style.animation = 'pulse 0.5s ease-out';
+        // Show order confirmation
         setTimeout(() => {
-            submitBtn.style.animation = '';
+            showOrderConfirmation(order);
         }, 500);
     }, 2000);
-});
-
-// Enhanced email validation
-function isValidEmail(email) {
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    return emailRegex.test(email);
 }
 
-// Enhanced notification system with better animations
-function showNotification(message, type = 'info') {
-    // Remove existing notifications
-    const existingNotifications = document.querySelectorAll('.notification');
-    existingNotifications.forEach(notification => {
-        notification.style.animation = 'slideOutRight 0.3s ease forwards';
-        setTimeout(() => notification.remove(), 300);
-    });
-    
-    // Create notification element
-    const notification = document.createElement('div');
-    notification.className = `notification notification-${type}`;
-    
-    const icons = {
-        success: 'fas fa-check-circle',
-        error: 'fas fa-exclamation-circle',
-        info: 'fas fa-info-circle'
-    };
-    
-    const colors = {
-        success: '#4CAF50',
-        error: '#f44336',
-        info: '#2196F3'
-    };
-    
-    notification.innerHTML = `
-        <div class="notification-content">
-            <div class="notification-icon">
-                <i class="${icons[type]}"></i>
-            </div>
-            <span class="notification-message">${message}</span>
-            <button class="notification-close" onclick="this.parentElement.parentElement.remove()">
+// Show Order Confirmation
+function showOrderConfirmation(order) {
+    const modal = document.createElement('div');
+    modal.className = 'modal active';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <button class="modal-close" onclick="this.closest('.modal').remove()">
                 <i class="fas fa-times"></i>
             </button>
+            <div style="text-align: center; padding: 2rem;">
+                <div style="font-size: 4rem; color: #4CAF50; margin-bottom: 1rem;">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h2>Order Placed Successfully!</h2>
+                <p style="color: #616161; margin: 1rem 0;">Thank you for your order</p>
+                <div style="background: #F5F5F5; padding: 1.5rem; border-radius: 12px; margin: 2rem 0;">
+                    <p><strong>Order ID:</strong> ${order.id}</p>
+                    <p><strong>Total Amount:</strong> ₹${order.total}</p>
+                    <p><strong>Payment Method:</strong> ${order.paymentMethod.toUpperCase()}</p>
+                </div>
+                <p style="font-size: 0.9rem; color: #9E9E9E;">
+                    You will receive an order confirmation email shortly
+                </p>
+                <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem;">
+                    <button class="btn btn-primary" onclick="this.closest('.modal').remove(); showDashboard()">
+                        View Orders
+                    </button>
+                    <button class="btn btn-outline" onclick="this.closest('.modal').remove()">
+                        Continue Shopping
+                    </button>
+                </div>
+            </div>
         </div>
     `;
-    
-    // Enhanced notification styles
-    notification.style.cssText = `
-        position: fixed;
-        top: 100px;
-        right: 20px;
-        background: ${colors[type]};
-        color: white;
-        padding: 1rem 1.5rem;
-        border-radius: 12px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-        z-index: 10000;
-        max-width: 400px;
-        animation: slideInRight 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-    `;
-    
-    // Add notification to body
-    document.body.appendChild(notification);
-    
-    // Auto remove after 5 seconds with fade out
-    setTimeout(() => {
-        if (notification && notification.parentElement) {
-            notification.style.animation = 'slideOutRight 0.3s ease forwards';
-            setTimeout(() => notification.remove(), 300);
-        }
-    }, 5000);
+    document.body.appendChild(modal);
 }
 
-// Active navigation link highlighting with smooth transitions
-window.addEventListener('scroll', function() {
-    const sections = document.querySelectorAll('section[id]');
-    const navLinks = document.querySelectorAll('.nav-link');
-    
-    let current = '';
-    sections.forEach(section => {
-        const sectionTop = section.offsetTop - 120;
-        const sectionHeight = section.clientHeight;
-        if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
-            current = section.getAttribute('id');
-        }
-    });
-    
-    navLinks.forEach(link => {
-        link.classList.remove('active');
-        if (link.getAttribute('href') === `#${current}`) {
-            link.classList.add('active');
-        }
-    });
-});
+// ====================
+// USER AUTHENTICATION
+// ====================
 
-// Enhanced button click effects with ripple animation
-document.addEventListener('DOMContentLoaded', function() {
-    const buttons = document.querySelectorAll('.btn');
+// Show Auth Modal
+function showAuthModal() {
+    const modal = document.getElementById('authModal');
+    if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+// Close Auth Modal
+function closeAuthModal() {
+    const modal = document.getElementById('authModal');
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+}
+
+// Setup Form Handlers
+function setupFormHandlers() {
+    // Login Form
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            handleLogin();
+        });
+    }
     
-    buttons.forEach(button => {
-        button.addEventListener('click', function(e) {
-            // Create ripple effect
-            const ripple = document.createElement('span');
-            const rect = this.getBoundingClientRect();
-            const size = Math.max(rect.width, rect.height);
-            const x = e.clientX - rect.left - size / 2;
-            const y = e.clientY - rect.top - size / 2;
-            
-            ripple.style.cssText = `
-                position: absolute;
-                width: ${size}px;
-                height: ${size}px;
-                left: ${x}px;
-                top: ${y}px;
-                background: rgba(255, 255, 255, 0.4);
-                border-radius: 50%;
-                transform: scale(0);
-                animation: ripple 0.6s ease-out;
-                pointer-events: none;
-                z-index: 1;
+    // Register Form
+    const registerForm = document.getElementById('registerForm');
+    if (registerForm) {
+        registerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            handleRegister();
+        });
+    }
+    
+    // Contact Form
+    const contactForm = document.getElementById('contactForm');
+    if (contactForm) {
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            handleContactForm();
+        });
+    }
+    
+    // Newsletter Form
+    const newsletterForm = document.getElementById('newsletterForm');
+    if (newsletterForm) {
+        newsletterForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            handleNewsletter();
+        });
+    }
+    
+    // Profile Form
+    const profileForm = document.getElementById('profileForm');
+    if (profileForm) {
+        profileForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            handleProfileUpdate();
+        });
+    }
+}
+
+// Handle Login
+function handleLogin() {
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+    
+    showLoading();
+    
+    // Simulate login process
+    setTimeout(() => {
+        const user = {
+            id: 'user_' + Date.now(),
+            name: email.split('@')[0],
+            email: email,
+            phone: '+91 9876543210',
+            createdAt: new Date().toISOString()
+        };
+        
+        appState.user = user;
+        localStorage.setItem('user', JSON.stringify(user));
+        
+        hideLoading();
+        closeAuthModal();
+        updateAccountMenu();
+        showToast('Login successful!');
+    }, 1500);
+}
+
+// Handle Register
+function handleRegister() {
+    const name = document.getElementById('registerName').value;
+    const email = document.getElementById('registerEmail').value;
+    const phone = document.getElementById('registerPhone').value;
+    const password = document.getElementById('registerPassword').value;
+    const confirmPassword = document.getElementById('registerConfirmPassword').value;
+    
+    if (password !== confirmPassword) {
+        showToast('Passwords do not match!');
+        return;
+    }
+    
+    showLoading();
+    
+    // Simulate registration process
+    setTimeout(() => {
+        const user = {
+            id: 'user_' + Date.now(),
+            name: name,
+            email: email,
+            phone: phone,
+            createdAt: new Date().toISOString()
+        };
+        
+        appState.user = user;
+        localStorage.setItem('user', JSON.stringify(user));
+        
+        hideLoading();
+        closeAuthModal();
+        updateAccountMenu();
+        showToast('Registration successful!');
+    }, 1500);
+}
+
+// Check Auth Status
+function checkAuth() {
+    const savedUser = localStorage.getItem('user');
+    if (savedUser) {
+        appState.user = JSON.parse(savedUser);
+        updateAccountMenu();
+    }
+}
+
+// Update Account Menu
+function updateAccountMenu() {
+    const accountMenuName = document.getElementById('accountUserName');
+    const dashUserName = document.getElementById('dashUserName');
+    const dashUserEmail = document.getElementById('dashUserEmail');
+    const navUserName = document.getElementById('navUserName');
+    const accountMenuItems = document.getElementById('accountMenuItems');
+    
+    if (appState.user) {
+        if (accountMenuName) accountMenuName.textContent = appState.user.name;
+        if (dashUserName) dashUserName.textContent = appState.user.name;
+        if (dashUserEmail) dashUserEmail.textContent = appState.user.email;
+        if (navUserName) navUserName.textContent = appState.user.name.split(' ')[0];
+        
+        if (accountMenuItems) {
+            accountMenuItems.innerHTML = `
+                <a href="#" onclick="showDashboard(); return false;">
+                    <i class="fas fa-box"></i> My Orders
+                </a>
+                <a href="#" onclick="showDashboard(); return false;">
+                    <i class="fas fa-user"></i> Profile
+                </a>
+                <a href="#" onclick="showDashboard(); return false;">
+                    <i class="fas fa-heart"></i> Wishlist
+                </a>
+                <a href="#" onclick="logout(); return false;">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
             `;
-            
-            this.style.position = 'relative';
-            this.style.overflow = 'hidden';
-            this.appendChild(ripple);
-            
-            setTimeout(() => {
-                ripple.remove();
-            }, 600);
-        });
-    });
-});
-
-// Add enhanced styles for notifications and animations
-const enhancedStyles = document.createElement('style');
-enhancedStyles.textContent = `
-    @keyframes slideInRight {
-        from {
-            transform: translateX(100%) scale(0.8);
-            opacity: 0;
         }
-        to {
-            transform: translateX(0) scale(1);
-            opacity: 1;
-        }
-    }
-    
-    @keyframes slideOutRight {
-        from {
-            transform: translateX(0) scale(1);
-            opacity: 1;
-        }
-        to {
-            transform: translateX(100%) scale(0.8);
-            opacity: 0;
-        }
-    }
-    
-    @keyframes ripple {
-        to {
-            transform: scale(2);
-            opacity: 0;
-        }
-    }
-    
-    .notification-content {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-    }
-    
-    .notification-icon {
-        font-size: 1.2rem;
-        flex-shrink: 0;
-    }
-    
-    .notification-message {
-        flex: 1;
-        line-height: 1.4;
-    }
-    
-    .notification-close {
-        background: none;
-        border: none;
-        color: white;
-        cursor: pointer;
-        font-size: 1rem;
-        padding: 4px;
-        width: 24px;
-        height: 24px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        transition: background-color 0.3s ease;
-        flex-shrink: 0;
-    }
-    
-    .notification-close:hover {
-        background-color: rgba(255, 255, 255, 0.2);
-        transform: scale(1.1);
-    }
-    
-    .nav-link.active {
-        color: #4CAF50 !important;
-        font-weight: 600;
-        position: relative;
-    }
-    
-    .nav-link.active::after {
-        content: '';
-        position: absolute;
-        bottom: -5px;
-        left: 0;
-        width: 100%;
-        height: 2px;
-        background: #4CAF50;
-        border-radius: 1px;
-        animation: expandWidth 0.3s ease;
-    }
-    
-    @keyframes expandWidth {
-        from {
-            width: 0;
-        }
-        to {
-            width: 100%;
-        }
-    }
-    
-    /* Enhanced loading animation */
-    .btn:disabled {
-        opacity: 0.7;
-        cursor: not-allowed;
-        pointer-events: none;
-    }
-    
-    .fa-spinner {
-        animation: spin 1s linear infinite;
-    }
-    
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-    
-    /* Enhanced hover effects for cards */
-    .feature-card, .testimonial-card {
-        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-    
-    .feature-card:hover, .testimonial-card:hover {
-        transform: translateY(-8px) scale(1.02);
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-    }
-    
-    /* Smooth transitions for all interactive elements */
-    * {
-        transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, color 0.3s ease;
-    }
-`;
-
-document.head.appendChild(enhancedStyles);
-
-// Initialize page loading animation
-document.addEventListener('DOMContentLoaded', function() {
-    // Add loading screen
-    const loadingScreen = document.createElement('div');
-    loadingScreen.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(135deg, #F5F5DC 0%, #faf8f3 100%);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 9999;
-        transition: opacity 0.5s ease;
-    `;
-    
-    loadingScreen.innerHTML = `
-        <div style="text-align: center;">
-            <img src="images/final_nutsphere_logo_01-removebg-preview.png" alt="Loading" style="height: 80px; margin-bottom: 20px; animation: pulse 1.5s ease-in-out infinite;">
-            <div style="color: #4CAF50; font-size: 18px; font-weight: 600;">Loading NutsSphere...</div>
-        </div>
-    `;
-    
-    document.body.appendChild(loadingScreen);
-    
-    // Remove loading screen after page load
-    window.addEventListener('load', function() {
-        setTimeout(() => {
-            loadingScreen.style.opacity = '0';
-            setTimeout(() => {
-                loadingScreen.remove();
-            }, 500);
-        }, 1000);
-    });
-});
-
-// Add CSS animation for notifications
-const notificationStyles = document.createElement('style');
-notificationStyles.textContent = `
-    @keyframes slideInRight {
-        from {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
-    }
-    
-    .notification-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 1rem;
-    }
-    
-    .notification-close {
-        background: none;
-        border: none;
-        color: white;
-        cursor: pointer;
-        font-size: 1.2rem;
-        padding: 0;
-        width: 20px;
-        height: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        transition: background-color 0.3s ease;
-    }
-    
-    .notification-close:hover {
-        background-color: rgba(255, 255, 255, 0.2);
-    }
-`;
-document.head.appendChild(notificationStyles);
-
-// Add hover effects for cards
-document.addEventListener('DOMContentLoaded', function() {
-    const cards = document.querySelectorAll('.product-card, .feature-card, .testimonial-card');
-    
-    cards.forEach(card => {
-        card.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-10px)';
-        });
-        
-        card.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0)';
-        });
-    });
-});
-
-// Parallax effect for hero section
-window.addEventListener('scroll', function() {
-    const scrolled = window.pageYOffset;
-    const heroImage = document.querySelector('.hero-image');
-    if (heroImage) {
-        const speed = scrolled * 0.5;
-        heroImage.style.transform = `translateY(${speed}px)`;
-    }
-});
-
-// Active navigation link highlighting
-window.addEventListener('scroll', function() {
-    const sections = document.querySelectorAll('section[id]');
-    const navLinks = document.querySelectorAll('.nav-link');
-    
-    let current = '';
-    sections.forEach(section => {
-        const sectionTop = section.offsetTop - 100;
-        const sectionHeight = section.clientHeight;
-        if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
-            current = section.getAttribute('id');
-        }
-    });
-    
-    navLinks.forEach(link => {
-        link.classList.remove('active');
-        if (link.getAttribute('href') === `#${current}`) {
-            link.classList.add('active');
-        }
-    });
-});
-
-// Add active link styles
-const activeNavStyles = document.createElement('style');
-activeNavStyles.textContent = `
-    .nav-link.active {
-        color: #4CAF50 !important;
-        font-weight: 600;
-    }
-`;
-document.head.appendChild(activeNavStyles);
-
-// Button click effects
-document.addEventListener('DOMContentLoaded', function() {
-    const buttons = document.querySelectorAll('.btn');
-    
-    buttons.forEach(button => {
-        button.addEventListener('click', function(e) {
-            // Create ripple effect
-            const ripple = document.createElement('span');
-            const rect = this.getBoundingClientRect();
-            const size = Math.max(rect.width, rect.height);
-            const x = e.clientX - rect.left - size / 2;
-            const y = e.clientY - rect.top - size / 2;
-            
-            ripple.style.cssText = `
-                position: absolute;
-                width: ${size}px;
-                height: ${size}px;
-                left: ${x}px;
-                top: ${y}px;
-                background: rgba(255, 255, 255, 0.3);
-                border-radius: 50%;
-                transform: scale(0);
-                animation: ripple 0.6s ease-out;
-                pointer-events: none;
+    } else {
+        if (navUserName) navUserName.textContent = 'Account';
+        if (accountMenuItems) {
+            accountMenuItems.innerHTML = `
+                <a href="#" onclick="showAuthModal(); toggleAccountMenu(); return false;">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </a>
+                <a href="#" onclick="showAuthModal(); toggleAccountMenu(); return false;">
+                    <i class="fas fa-user-plus"></i> Register
+                </a>
             `;
-            
-            this.style.position = 'relative';
-            this.style.overflow = 'hidden';
-            this.appendChild(ripple);
-            
-            setTimeout(() => {
-                ripple.remove();
-            }, 600);
-        });
-    });
-});
-
-// Back to Top Button
-const backToTop = document.getElementById('backToTop');
-
-window.addEventListener('scroll', function() {
-    if (window.scrollY > 300) {
-        backToTop.classList.add('visible');
-    } else {
-        backToTop.classList.remove('visible');
-    }
-});
-
-backToTop.addEventListener('click', function() {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
-});
-
-// Enhanced Navbar Scroll Effect
-const navbar = document.querySelector('.navbar');
-let lastScrollY = window.scrollY;
-
-window.addEventListener('scroll', function() {
-    if (window.scrollY > lastScrollY) {
-        // Scrolling down
-        navbar.style.transform = 'translateY(-100%)';
-    } else {
-        // Scrolling up
-        navbar.style.transform = 'translateY(0)';
-    }
-    lastScrollY = window.scrollY;
-    
-    // Change navbar background on scroll
-    if (window.scrollY > 50) {
-        navbar.style.background = 'linear-gradient(135deg, rgba(76, 121, 68, 0.98) 0%, rgba(56, 86, 48, 0.98) 100%)';
-        navbar.style.backdropFilter = 'blur(20px)';
-    } else {
-        navbar.style.background = 'linear-gradient(135deg, rgba(76, 121, 68, 0.95) 0%, rgba(56, 86, 48, 0.95) 100%)';
-        navbar.style.backdropFilter = 'blur(15px)';
-    }
-});
-
-// Parallax Effect for Hero Section
-window.addEventListener('scroll', function() {
-    const scrolled = window.pageYOffset;
-    const hero = document.querySelector('.hero');
-    const heroParticles = document.querySelector('.hero-particles');
-    
-    if (hero && heroParticles) {
-        hero.style.transform = `translateY(${scrolled * 0.5}px)`;
-        heroParticles.style.transform = `translateY(${scrolled * 0.3}px)`;
-    }
-});
-
-// Newsletter Signup
-const newsletterForm = document.querySelector('.email-signup');
-if (newsletterForm) {
-    newsletterForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const emailInput = this.querySelector('.email-input');
-        const email = emailInput.value.trim();
-        
-        if (email) {
-            // Show success message
-            showNotification('Thank you for subscribing! Stay tuned for exciting updates.', 'success');
-            emailInput.value = '';
         }
-    });
+    }
 }
 
-// Enhanced Form Validation for Contact Form
-const contactForm = document.querySelector('.contact-form');
-if (contactForm) {
-    contactForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const name = this.querySelector('#name').value.trim();
-        const email = this.querySelector('#email').value.trim();
-        const message = this.querySelector('#message').value.trim();
-        
-        if (name && email && message) {
-            showNotification('Thank you for your message! We\'ll get back to you soon.', 'success');
-            this.reset();
-        } else {
-            showNotification('Please fill in all required fields.', 'error');
-        }
-    });
+// Toggle Account Menu
+function toggleAccountMenu() {
+    const dropdown = document.getElementById('accountDropdown');
+    if (dropdown) {
+        dropdown.classList.toggle('active');
+    }
 }
 
-// Notification System
-function showNotification(message, type) {
-    // Remove existing notifications
-    const existingNotifications = document.querySelectorAll('.notification');
-    existingNotifications.forEach(notification => notification.remove());
+// Logout
+function logout() {
+    appState.user = null;
+    localStorage.removeItem('user');
+    updateAccountMenu();
+    showToast('Logged out successfully');
+    toggleAccountMenu();
+}
+
+// ====================
+// USER DASHBOARD
+// ====================
+
+// Show Dashboard
+function showDashboard() {
+    if (!appState.user) {
+        showAuthModal();
+        return;
+    }
     
-    const notification = document.createElement('div');
-    notification.className = `notification ${type}`;
-    notification.innerHTML = `
-        <div class="notification-content">
-            <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
-            <span>${message}</span>
+    const modal = document.getElementById('dashboardModal');
+    if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        loadDashboardData();
+    }
+    
+    toggleAccountMenu();
+}
+
+// Close Dashboard
+function closeDashboardModal() {
+    const modal = document.getElementById('dashboardModal');
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+}
+
+// Load Dashboard Data
+function loadDashboardData() {
+    loadOrders();
+    loadProfile();
+}
+
+// Load Orders
+function loadOrders() {
+    const ordersList = document.getElementById('ordersList');
+    if (!ordersList) return;
+    
+    if (appState.orders.length === 0) {
+        ordersList.innerHTML = '<p style="text-align: center; color: #9E9E9E; padding: 2rem;">No orders yet</p>';
+        return;
+    }
+    
+    ordersList.innerHTML = appState.orders.reverse().map(order => `
+        <div class="order-card">
+            <div class="order-header">
+                <div>
+                    <strong>Order #${order.id}</strong>
+                    <p style="color: #9E9E9E; font-size: 0.9rem;">${new Date(order.date).toLocaleDateString()}</p>
+                </div>
+                <span class="order-status ${order.status}">${order.status.toUpperCase()}</span>
+            </div>
+            <div class="order-items">
+                ${order.items.map(item => `
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span>${item.name} x ${item.quantity}</span>
+                        <span>₹${item.price * item.quantity}</span>
+                    </div>
+                `).join('')}
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #E0E0E0;">
+                <strong>Total: ₹${order.total}</strong>
+                <button class="btn btn-outline" onclick="trackOrder('${order.id}')">
+                    <i class="fas fa-truck"></i> Track Order
+                </button>
+            </div>
         </div>
-    `;
-    
-    document.body.appendChild(notification);
-    
-    // Show notification
-    setTimeout(() => {
-        notification.classList.add('show');
-    }, 100);
-    
-    // Hide notification after 4 seconds
-    setTimeout(() => {
-        notification.classList.remove('show');
-        setTimeout(() => {
-            notification.remove();
-        }, 300);
-    }, 4000);
+    `).join('');
 }
 
-// Add notification styles
-const notificationStyles = document.createElement('style');
-notificationStyles.textContent = `
-    .notification {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        z-index: 10000;
-        padding: 15px 20px;
-        border-radius: 10px;
-        color: white;
-        font-weight: 600;
-        transform: translateX(400px);
-        transition: transform 0.3s ease;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        max-width: 350px;
-    }
+// Load Profile
+function loadProfile() {
+    if (!appState.user) return;
     
-    .notification.success {
-        background: linear-gradient(135deg, #4CAF50, #45a049);
-    }
+    const profileName = document.getElementById('profileName');
+    const profileEmail = document.getElementById('profileEmail');
+    const profilePhone = document.getElementById('profilePhone');
     
-    .notification.error {
-        background: linear-gradient(135deg, #f44336, #d32f2f);
-    }
-    
-    .notification.show {
-        transform: translateX(0);
-    }
-    
-    .notification-content {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-    
-    .notification-content i {
-        font-size: 1.2rem;
-    }
-    
-    @media (max-width: 768px) {
-        .notification {
-            right: 15px;
-            left: 15px;
-            transform: translateY(-100px);
-        }
-        
-        .notification.show {
-            transform: translateY(0);
-        }
-    }
-`;
-document.head.appendChild(notificationStyles);
+    if (profileName) profileName.value = appState.user.name || '';
+    if (profileEmail) profileEmail.value = appState.user.email || '';
+    if (profilePhone) profilePhone.value = appState.user.phone || '';
+}
 
-// Add ripple animation styles
-const rippleStyles = document.createElement('style');
-rippleStyles.textContent = `
-    @keyframes ripple {
-        to {
-            transform: scale(2);
-            opacity: 0;
-        }
+// Handle Profile Update
+function handleProfileUpdate() {
+    const name = document.getElementById('profileName').value;
+    const email = document.getElementById('profileEmail').value;
+    const phone = document.getElementById('profilePhone').value;
+    
+    appState.user.name = name;
+    appState.user.email = email;
+    appState.user.phone = phone;
+    
+    localStorage.setItem('user', JSON.stringify(appState.user));
+    updateAccountMenu();
+    showToast('Profile updated successfully!');
+}
+
+// ====================
+// ORDER TRACKING
+// ====================
+
+// Show Order Tracking
+function showOrderTracking() {
+    const modal = document.getElementById('orderTrackingModal');
+    if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
     }
-`;
-document.head.appendChild(rippleStyles);
+}
+
+// Close Order Tracking
+function closeOrderTrackingModal() {
+    const modal = document.getElementById('orderTrackingModal');
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+}
+
+// Track Order
+function trackOrder(orderId) {
+    const order = appState.orders.find(o => o.id === orderId);
+    if (!order) {
+        showToast('Order not found');
+        return;
+    }
+    
+    showOrderTracking();
+    
+    const trackingResult = document.getElementById('trackingResult');
+    if (trackingResult) {
+        trackingResult.innerHTML = `
+            <div style="padding: 2rem 0;">
+                <h4>Order #${order.id}</h4>
+                <p style="color: #9E9E9E; margin-bottom: 2rem;">Placed on ${new Date(order.date).toLocaleDateString()}</p>
+                
+                <div class="tracking-timeline">
+                    <div class="tracking-step active">
+                        <div class="step-icon"><i class="fas fa-check"></i></div>
+                        <div class="step-content">
+                            <h5>Order Placed</h5>
+                            <p>${new Date(order.date).toLocaleString()}</p>
+                        </div>
+                    </div>
+                    <div class="tracking-step ${order.status !== 'pending' ? 'active' : ''}">
+                        <div class="step-icon"><i class="fas fa-box"></i></div>
+                        <div class="step-content">
+                            <h5>Processing</h5>
+                            <p>${order.status !== 'pending' ? 'In progress' : 'Pending'}</p>
+                        </div>
+                    </div>
+                    <div class="tracking-step ${order.status === 'shipped' || order.status === 'delivered' ? 'active' : ''}">
+                        <div class="step-icon"><i class="fas fa-truck"></i></div>
+                        <div class="step-content">
+                            <h5>Shipped</h5>
+                            <p>${order.status === 'shipped' || order.status === 'delivered' ? 'On the way' : 'Not yet shipped'}</p>
+                        </div>
+                    </div>
+                    <div class="tracking-step ${order.status === 'delivered' ? 'active' : ''}">
+                        <div class="step-icon"><i class="fas fa-home"></i></div>
+                        <div class="step-content">
+                            <h5>Delivered</h5>
+                            <p>${order.status === 'delivered' ? 'Delivered' : 'Not yet delivered'}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+}
+
+// ====================
+// UTILITY FUNCTIONS
+// ====================
+
+// Show Toast Notification
+function showToast(message) {
+    const toast = document.getElementById('toast');
+    const toastMessage = document.getElementById('toastMessage');
+    
+    if (toast && toastMessage) {
+        toastMessage.textContent = message;
+        toast.classList.add('active');
+        
+        setTimeout(() => {
+            toast.classList.remove('active');
+        }, 3000);
+    }
+}
+
+// Show Loading
+function showLoading() {
+    const loading = document.getElementById('loadingOverlay');
+    if (loading) {
+        loading.classList.add('active');
+    }
+}
+
+// Hide Loading
+function hideLoading() {
+    const loading = document.getElementById('loadingOverlay');
+    if (loading) {
+        loading.classList.remove('active');
+    }
+}
+
+// Quick View Product
+function showQuickView(productId) {
+    const product = appState.products.find(p => p.id === productId);
+    if (!product) return;
+    
+    const modal = document.getElementById('quickViewModal');
+    const content = document.getElementById('quickViewContent');
+    
+    if (modal && content) {
+        content.innerHTML = `
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                <div>
+                    <img src="${product.image}" alt="${product.name}" style="width: 100%; border-radius: 12px;" onerror="this.src='images/final_nutsphere_logo_01-removebg-preview.png'">
+                </div>
+                <div>
+                    <h2>${product.name}</h2>
+                    <p style="color: #616161; margin: 1rem 0;">${product.description}</p>
+                    <div style="display: flex; align-items: center; gap: 1rem; margin: 1.5rem 0;">
+                        <span style="font-size: 2rem; font-weight: 700; color: #E65100;">₹${product.price}</span>
+                        <span style="color: #9E9E9E; text-decoration: line-through;">₹${product.originalPrice}</span>
+                        <span style="background: #4CAF50; color: white; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.85rem;">${product.discount}% OFF</span>
+                    </div>
+                    <div style="margin: 1.5rem 0;">
+                        <h4>Features:</h4>
+                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem;">
+                            ${product.features.map(f => `<span style="background: #F5F5F5; padding: 0.5rem 1rem; border-radius: 8px;">${f}</span>`).join('')}
+                        </div>
+                    </div>
+                    <button class="btn btn-primary btn-block" onclick="addToCart('${product.id}'); closeQuickView();">
+                        <i class="fas fa-shopping-cart"></i> Add to Cart
+                    </button>
+                </div>
+            </div>
+        `;
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+// Close Quick View
+function closeQuickView() {
+    const modal = document.getElementById('quickViewModal');
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+}
+
+// Handle Contact Form
+function handleContactForm() {
+    showLoading();
+    setTimeout(() => {
+        hideLoading();
+        document.getElementById('contactForm').reset();
+        showToast('Message sent successfully! We will get back to you soon.');
+    }, 1500);
+}
+
+// Handle Newsletter
+function handleNewsletter() {
+    showToast('Thank you for subscribing!');
+    document.getElementById('newsletterForm').reset();
+}
+
+// Animate Hero Stats
+function animateHero() {
+    const stats = document.querySelectorAll('.stat-number');
+    
+    stats.forEach(stat => {
+        const target = parseInt(stat.dataset.target);
+        const duration = 2000;
+        const step = target / (duration / 16);
+        let current = 0;
+        
+        const timer = setInterval(() => {
+            current += step;
+            if (current >= target) {
+                stat.textContent = target.toLocaleString();
+                clearInterval(timer);
+            } else {
+                stat.textContent = Math.floor(current).toLocaleString();
+            }
+        }, 16);
+    });
+}
+
+// Toggle Mobile Menu
+function toggleMobileMenu() {
+    const hamburger = document.querySelector('.hamburger');
+    const navMenu = document.querySelector('.nav-menu');
+    
+    if (hamburger && navMenu) {
+        hamburger.classList.toggle('active');
+        navMenu.classList.toggle('active');
+    }
+}
+
+// Close dropdowns when clicking outside
+document.addEventListener('click', function(e) {
+    const accountDropdown = document.getElementById('accountDropdown');
+    const userBtn = document.querySelector('.user-btn');
+    
+    if (accountDropdown && !accountDropdown.contains(e.target) && !userBtn?.contains(e.target)) {
+        accountDropdown.classList.remove('active');
+    }
+});
+
+// Helper Functions for UI
+function showReturnPolicy() {
+    showToast('Return policy page - Coming soon!');
+}
+
+function showShippingInfo() {
+    showToast('Shipping info page - Coming soon!');
+}
+
+function showFAQ() {
+    showToast('FAQ page - Coming soon!');
+}
+
+function showAddAddressForm() {
+    showToast('Add address feature - Coming soon!');
+}
+
+console.log('NutsSphere E-Commerce System Loaded Successfully! 🎉');

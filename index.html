@@ -3,32 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="NutsSphere - Premium organic nuts, seeds, dried fruits and superfoods. High quality, lab-tested, eco-friendly packaging. Your trusted source for healthy nutrition in Nanded, Maharashtra.">
-    <meta name="keywords" content="organic nuts, superfoods, premium seeds, dried fruits, healthy snacks, nutrition, Nanded">
-    <meta name="author" content="NutsSphere">
-    <title>NutsSphere - A Sphere of Superfoods | Premium Organic Nuts & Seeds</title>
+    <meta name="description" content="NutsSphere - Premium organic nuts, seeds, dried fruits and superfoods. Shop online with secure payment, fast delivery, and order tracking.">
+    <title>NutsSphere - A Sphere of Superfoods | E-Commerce Store</title>
     <link rel="icon" type="image/png" href="images/final_nutsphere_logo_01-removebg-preview.png">
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <!-- Navigation -->
-    <nav class="navbar">
+    <nav class="navbar" id="navbar">
         <div class="nav-container">
             <div class="nav-logo">
                 <img src="images/final_nutsphere_logo_01-removebg-preview.png" alt="NutsSphere Logo" class="logo">
                 <span class="brand-name">NutsSphere</span>
             </div>
             <ul class="nav-menu">
-                <li><a href="#home" class="nav-link">Home</a></li>
+                <li><a href="#home" class="nav-link active">Home</a></li>
+                <li><a href="#products" class="nav-link">Shop</a></li>
                 <li><a href="#about" class="nav-link">About</a></li>
-                <li><a href="#products" class="nav-link">Products</a></li>
-                <li><a href="#why-us" class="nav-link">Why Us</a></li>
-                <li><a href="#testimonials" class="nav-link">Testimonials</a></li>
                 <li><a href="#contact" class="nav-link">Contact</a></li>
+                <li class="nav-user-menu">
+                    <button class="nav-link user-btn" onclick="toggleAccountMenu()">
+                        <i class="fas fa-user"></i>
+                        <span id="navUserName">Account</span>
+                    </button>
+                </li>
+                <li>
+                    <button class="nav-link cart-btn" onclick="toggleCart()">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-badge" id="cartBadge">0</span>
+                    </button>
+                </li>
             </ul>
-            <div class="hamburger">
+            <div class="hamburger" onclick="toggleMobileMenu()">
                 <span class="bar"></span>
                 <span class="bar"></span>
                 <span class="bar"></span>
@@ -36,64 +44,87 @@
         </div>
     </nav>
 
+    <!-- Account Dropdown Menu -->
+    <div class="account-dropdown" id="accountDropdown">
+        <div class="account-menu-header">
+            <i class="fas fa-user-circle"></i>
+            <span id="accountMenuName">Guest User</span>
+        </div>
+        <div class="account-menu-items" id="accountMenuItems">
+            <!-- Dynamically populated -->
+        </div>
+    </div>
+
     <!-- Hero Section -->
     <section id="home" class="hero">
-        <div class="hero-particles"></div>
-        <div class="hero-content">
-            <div class="hero-logo-showcase">
-                <img src="images/final nutsphere logo 04.png" alt="NutsSphere Main Logo" class="hero-main-logo">
-            </div>
-            <h1 class="hero-title">
-                <span class="title-word" data-delay="0">Nuts</span><span class="title-word" data-delay="200">Sphere</span>
-            </h1>
-            <p class="hero-subtitle">
-                <span class="subtitle-text">A Sphere of</span>
-                <span class="rotating-words">
-                    <span class="word active">Superfoods</span>
-                    <span class="word">Nutrition</span>
-                    <span class="word">Wellness</span>
-                    <span class="word">Quality</span>
-                </span>
-            </p>
-            <p class="hero-description fade-in-up">Discover nature's finest nuts, seeds, dried fruits, and superfoods. Premium quality, organic, and nutrient-rich for a healthier you.</p>
-            <div class="hero-buttons">
-                <a href="#products" class="btn btn-primary pulse-btn">
-                    <i class="fas fa-shopping-cart"></i>
-                    Shop Now
-                </a>
-                <a href="#about" class="btn btn-secondary glow-btn">
-                    <i class="fas fa-play-circle"></i>
-                    Learn More
-                </a>
-            </div>
-            <div class="hero-stats">
-                <div class="stat-item">
-                    <span class="stat-number" data-target="10000">0</span>
-                    <span class="stat-label">Happy Customers</span>
+        <div class="hero-bg"></div>
+        <div class="hero-overlay"></div>
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1 class="hero-title">
+                        <span class="title-word">Nuts</span><span class="title-word accent">Sphere</span>
+                    </h1>
+                    <p class="hero-subtitle">
+                        A Sphere of <span class="rotating-text"></span>
+                    </p>
+                    <p class="hero-description">Premium organic nuts, seeds, dried fruits & superfoods delivered to your doorstep</p>
+                    <div class="hero-cta">
+                        <a href="#products" class="btn btn-primary">
+                            <i class="fas fa-shopping-bag"></i> Shop Now
+                        </a>
+                        <a href="#about" class="btn btn-outline">
+                            <i class="fas fa-play-circle"></i> Learn More
+                        </a>
+                    </div>
                 </div>
-                <div class="stat-item">
-                    <span class="stat-number" data-target="500">0</span>
-                    <span class="stat-label">Premium Products</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-number" data-target="15">0</span>
-                    <span class="stat-label">Years Experience</span>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <div class="stat-number" data-target="10000">0</div>
+                        <div class="stat-label">Happy Customers</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" data-target="500">0</div>
+                        <div class="stat-label">Products</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" data-target="50">0</div>
+                        <div class="stat-label">Cities</div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="hero-image">
-            <div class="floating-nuts">
-                <div class="floating-nut nut-1">🥜</div>
-                <div class="floating-nut nut-2">🌰</div>
-                <div class="floating-nut nut-3">🥥</div>
-                <div class="floating-nut nut-4">🌾</div>
-                <div class="floating-nut nut-5">🫘</div>
-            </div>
-            <div class="hero-bg-overlay"></div>
+        <div class="floating-elements">
+            <div class="float-item">🥜</div>
+            <div class="float-item">🌰</div>
+            <div class="float-item">🍇</div>
+            <div class="float-item">🌾</div>
         </div>
         <div class="scroll-indicator">
-            <div class="scroll-arrow">
-                <i class="fas fa-chevron-down"></i>
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="products" class="products">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Our Premium Products</h2>
+                <p class="section-subtitle">"Pure Goodness in Every Bite" - 100% Premium Quality, Hygienically Packed</p>
+            </div>
+
+            <!-- Product Filter -->
+            <div class="product-filter">
+                <button class="filter-btn active" data-category="all">All Products</button>
+                <button class="filter-btn" data-category="nuts">Nuts</button>
+                <button class="filter-btn" data-category="seeds">Seeds</button>
+                <button class="filter-btn" data-category="dried-fruits">Dried Fruits</button>
+                <button class="filter-btn" data-category="superfoods">Superfoods</button>
+            </div>
+
+            <!-- Products Grid -->
+            <div class="products-grid" id="productsGrid">
+                <!-- Products will be dynamically loaded -->
             </div>
         </div>
     </section>
@@ -102,275 +133,37 @@
     <section id="about" class="about">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">What is NutsSphere?</h2>
-                <p class="section-subtitle">Your gateway to premium superfoods and natural nutrition</p>
+                <h2 class="section-title">About NutsSphere</h2>
+                <p class="section-subtitle">Your Gateway to Premium Superfoods</p>
             </div>
             <div class="about-content">
                 <div class="about-text">
-                    <div class="about-item">
-                        <h3><i class="fas fa-eye"></i> Our Vision</h3>
-                        <p>To become the world's most trusted source of premium superfoods, empowering people to live healthier lives through nature's finest offerings.</p>
-                    </div>
-                    <div class="about-item">
-                        <h3><i class="fas fa-heart"></i> Our Mission</h3>
-                        <p>We are committed to sourcing, processing, and delivering the highest quality nuts, seeds, dried fruits, and superfoods while supporting sustainable farming practices and fair trade.</p>
-                    </div>
+                    <h3><i class="fas fa-bullseye"></i> Our Mission</h3>
+                    <p>To provide the highest quality organic nuts, seeds, and superfoods while supporting sustainable farming and fair trade practices.</p>
+                    <h3><i class="fas fa-eye"></i> Our Vision</h3>
+                    <p>To become the most trusted source of premium superfoods, empowering people to live healthier lives through nature's finest offerings.</p>
                 </div>
-                <div class="about-image">
-                    <div class="about-img-placeholder">
-                        <i class="fas fa-seedling"></i>
-                        <p>Premium Quality Superfoods</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Products Section -->
-    <section id="products" class="products">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Our Product Categories</h2>
-                <p class="section-subtitle">Carefully curated superfoods for every nutritional need</p>
-            </div>
-            <div class="products-grid">
-                <div class="product-card" data-category="nuts">
-                    <div class="product-image">
-                        <div class="product-bg-image"></div>
-                        <div class="product-icon">
-                            <i class="fas fa-acorn"></i>
-                        </div>
-                        <div class="product-overlay">
-                            <div class="product-badges">
-                                <span class="badge organic">Organic</span>
-                                <span class="badge premium">Premium</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="product-content">
-                        <h3 class="product-title">Premium Nuts</h3>
-                        <p class="product-description">Almonds, walnuts, cashews, pistachios, and more. Rich in healthy fats, protein, and essential vitamins.</p>
-                        <div class="product-features">
-                            <span class="feature-tag">High Protein</span>
-                            <span class="feature-tag">Omega-3</span>
-                        </div>
-                        <a href="#" class="product-link">
-                            Explore Nuts 
-                            <i class="fas fa-arrow-right"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="product-card" data-category="seeds">
-                    <div class="product-image">
-                        <div class="product-bg-image"></div>
-                        <div class="product-icon">
-                            <i class="fas fa-seedling"></i>
-                        </div>
-                        <div class="product-overlay">
-                            <div class="product-badges">
-                                <span class="badge organic">Organic</span>
-                                <span class="badge superfood">Superfood</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="product-content">
-                        <h3 class="product-title">Organic Seeds</h3>
-                        <p class="product-description">Chia, flax, pumpkin, sunflower seeds. Packed with omega-3s, fiber, and plant-based protein.</p>
-                        <div class="product-features">
-                            <span class="feature-tag">High Fiber</span>
-                            <span class="feature-tag">Antioxidants</span>
-                        </div>
-                        <a href="#" class="product-link">
-                            Explore Seeds 
-                            <i class="fas fa-arrow-right"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="product-card" data-category="berries">
-                    <div class="product-image">
-                        <div class="product-bg-image"></div>
-                        <div class="product-icon">
-                            <i class="fas fa-apple-alt"></i>
-                        </div>
-                        <div class="product-overlay">
-                            <div class="product-badges">
-                                <span class="badge natural">Natural</span>
-                                <span class="badge vitamin">Vitamin C</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="product-content">
-                        <h3 class="product-title">Dried Berries</h3>
-                        <p class="product-description">Goji berries, cranberries, blueberries, mulberries. Antioxidant-rich and naturally sweet.</p>
-                        <div class="product-features">
-                            <span class="feature-tag">Antioxidants</span>
-                            <span class="feature-tag">Natural Sugar</span>
-                        </div>
-                        <a href="#" class="product-link">
-                            Explore Berries 
-                            <i class="fas fa-arrow-right"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="product-card" data-category="mixes">
-                    <div class="product-image">
-                        <div class="product-bg-image"></div>
-                        <div class="product-icon">
-                            <i class="fas fa-leaf"></i>
-                        </div>
-                        <div class="product-overlay">
-                            <div class="product-badges">
-                                <span class="badge blend">Custom Blend</span>
-                                <span class="badge energy">Energy</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="product-content">
-                        <h3 class="product-title">Superfood Mixes</h3>
-                        <p class="product-description">Carefully crafted blends combining the best of nuts, seeds, and dried fruits for optimal nutrition.</p>
-                        <div class="product-features">
-                            <span class="feature-tag">Complete Nutrition</span>
-                            <span class="feature-tag">Energy Boost</span>
-                        </div>
-                        <a href="#" class="product-link">
-                            Explore Mixes 
-                            <i class="fas fa-arrow-right"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Why Choose Us Section -->
-    <section id="why-us" class="why-us">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Why Choose NutsSphere?</h2>
-                <p class="section-subtitle">Quality, sustainability, and nutrition in every package</p>
-            </div>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">
+                <div class="about-features">
+                    <div class="about-feature">
                         <i class="fas fa-leaf"></i>
+                        <h4>100% Organic</h4>
+                        <p>Certified organic products</p>
                     </div>
-                    <h3 class="feature-title">100% Organic</h3>
-                    <p class="feature-description">All our products are certified organic, free from pesticides, chemicals, and artificial additives.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-dna"></i>
-                    </div>
-                    <h3 class="feature-title">Nutrient-Rich</h3>
-                    <p class="feature-description">Packed with essential vitamins, minerals, healthy fats, and plant-based proteins for optimal health.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
+                    <div class="about-feature">
                         <i class="fas fa-microscope"></i>
+                        <h4>Lab Tested</h4>
+                        <p>Quality assured</p>
                     </div>
-                    <h3 class="feature-title">Lab-Tested</h3>
-                    <p class="feature-description">Every batch undergoes rigorous quality testing to ensure purity, freshness, and nutritional value.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-recycle"></i>
+                    <div class="about-feature">
+                        <i class="fas fa-shipping-fast"></i>
+                        <h4>Fast Delivery</h4>
+                        <p>Quick & secure shipping</p>
                     </div>
-                    <h3 class="feature-title">Eco-Packaging</h3>
-                    <p class="feature-description">Sustainable, recyclable packaging that protects your food while protecting our planet.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Testimonials Section -->
-    <section id="testimonials" class="testimonials">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">What Our Customers Say</h2>
-                <p class="section-subtitle">Real stories from happy customers</p>
-            </div>
-            <div class="testimonials-grid">
-                <div class="testimonial-card">
-                    <div class="testimonial-content">
-                        <div class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                        <p class="testimonial-text">"NutsSphere has transformed my snacking habits! Their organic almonds and mixed nuts are incredibly fresh and delicious. I love knowing I'm eating clean, healthy food."</p>
-                        <div class="testimonial-author">
-                            <div class="author-image">
-                                <i class="fas fa-user-circle"></i>
-                            </div>
-                            <div class="author-info">
-                                <h4 class="author-name">Sarah Johnson</h4>
-                                <p class="author-role">Health Enthusiast</p>
-                            </div>
-                        </div>
+                    <div class="about-feature">
+                        <i class="fas fa-shield-alt"></i>
+                        <h4>Secure Payment</h4>
+                        <p>Safe transactions</p>
                     </div>
-                </div>
-                <div class="testimonial-card">
-                    <div class="testimonial-content">
-                        <div class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                        <p class="testimonial-text">"As a nutritionist, I recommend NutsSphere to all my clients. The quality is outstanding, and I appreciate their commitment to organic and sustainable practices."</p>
-                        <div class="testimonial-author">
-                            <div class="author-image">
-                                <i class="fas fa-user-circle"></i>
-                            </div>
-                            <div class="author-info">
-                                <h4 class="author-name">Dr. Michael Chen</h4>
-                                <p class="author-role">Certified Nutritionist</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="testimonial-card">
-                    <div class="testimonial-content">
-                        <div class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                        <p class="testimonial-text">"The superfood mixes are my go-to for post-workout snacks. Great taste, perfect packaging, and the customer service is exceptional. Highly recommended!"</p>
-                        <div class="testimonial-author">
-                            <div class="author-image">
-                                <i class="fas fa-user-circle"></i>
-                            </div>
-                            <div class="author-info">
-                                <h4 class="author-name">Emily Rodriguez</h4>
-                                <p class="author-role">Fitness Coach</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Newsletter Section -->
-    <section class="newsletter">
-        <div class="container">
-            <div class="newsletter-content">
-                <div class="newsletter-text">
-                    <h3>Stay Updated with NutsSphere</h3>
-                    <p>Get the latest updates on new products, health tips, and exclusive offers delivered to your inbox.</p>
-                </div>
-                <div class="newsletter-form">
-                    <form class="email-signup">
-                        <input type="email" placeholder="Enter your email address" required class="email-input">
-                        <button type="submit" class="btn btn-primary">Subscribe</button>
-                    </form>
-                    <p class="privacy-text">We respect your privacy. Unsubscribe at any time.</p>
                 </div>
             </div>
         </div>
@@ -385,50 +178,46 @@
             </div>
             <div class="contact-content">
                 <div class="contact-info">
-                    <h3>Contact Information</h3>
                     <div class="contact-item">
                         <i class="fas fa-envelope"></i>
-                        <span>sohanankulwar@gmail.com</span>
+                        <div>
+                            <h4>Email</h4>
+                            <p>sohanankulwar@gmail.com</p>
+                        </div>
                     </div>
                     <div class="contact-item">
                         <i class="fas fa-phone"></i>
-                        <span>+91 7038979754</span>
+                        <div>
+                            <h4>Phone</h4>
+                            <p>+91 7038979754</p>
+                        </div>
                     </div>
                     <div class="contact-item">
                         <i class="fas fa-map-marker-alt"></i>
-                        <span>Nanded, Maharashtra, India</span>
-                    </div>
-                    <div class="contact-item whatsapp-contact">
-                        <i class="fab fa-whatsapp"></i>
-                        <a href="https://wa.me/917038979754?text=Hello%20NutsSphere!%20I%20would%20like%20to%20know%20more%20about%20your%20premium%20superfoods." target="_blank" class="whatsapp-link">
-                            WhatsApp: +91 7038979754
-                        </a>
-                    </div>
-                    <div class="social-links">
-                        <h4>Follow Us</h4>
-                        <div class="social-icons">
-                            <a href="#"><i class="fab fa-facebook-f"></i></a>
-                            <a href="#"><i class="fab fa-instagram"></i></a>
-                            <a href="#"><i class="fab fa-twitter"></i></a>
-                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                            <a href="https://wa.me/917038979754?text=Hello%20NutsSphere!%20I%20would%20like%20to%20know%20more%20about%20your%20premium%20superfoods." target="_blank" class="whatsapp-social">
-                                <i class="fab fa-whatsapp"></i>
-                            </a>
+                        <div>
+                            <h4>Location</h4>
+                            <p>Nanded, Maharashtra, India</p>
                         </div>
                     </div>
                 </div>
-                <form class="contact-form">
-                    <div class="form-group">
-                        <label for="name">Name</label>
-                        <input type="text" id="name" name="name" required>
+                <form class="contact-form" id="contactForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="contactName">Name</label>
+                            <input type="text" id="contactName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactEmail">Email</label>
+                            <input type="email" id="contactEmail" required>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" required>
+                        <label for="contactSubject">Subject</label>
+                        <input type="text" id="contactSubject" required>
                     </div>
                     <div class="form-group">
-                        <label for="message">Message</label>
-                        <textarea id="message" name="message" rows="5" required></textarea>
+                        <label for="contactMessage">Message</label>
+                        <textarea id="contactMessage" rows="5" required></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary">Send Message</button>
                 </form>
@@ -442,37 +231,42 @@
             <div class="footer-content">
                 <div class="footer-section">
                     <div class="footer-logo">
-                        <img src="images/final_nutsphere_logo_01-removebg-preview.png" alt="NutsSphere Logo" class="footer-logo-img">
-                        <span class="footer-brand-name">NutsSphere</span>
+                        <img src="images/final_nutsphere_logo_01-removebg-preview.png" alt="NutsSphere">
+                        <span>NutsSphere</span>
                     </div>
-                    <p class="footer-description">A Sphere of Superfoods - Your trusted source for premium organic nuts, seeds, and superfoods.</p>
+                    <p>Premium organic nuts, seeds & superfoods for a healthier lifestyle.</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="https://wa.me/917038979754" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                    </div>
                 </div>
                 <div class="footer-section">
-                    <h3>Quick Links</h3>
-                    <ul class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
                         <li><a href="#home">Home</a></li>
+                        <li><a href="#products">Shop</a></li>
                         <li><a href="#about">About</a></li>
-                        <li><a href="#products">Products</a></li>
                         <li><a href="#contact">Contact</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
-                    <h3>Products</h3>
-                    <ul class="footer-links">
-                        <li><a href="#">Premium Nuts</a></li>
-                        <li><a href="#">Organic Seeds</a></li>
-                        <li><a href="#">Dried Berries</a></li>
-                        <li><a href="#">Superfood Mixes</a></li>
+                    <h4>Customer Service</h4>
+                    <ul>
+                        <li><a href="#" onclick="showOrderTracking()">Track Order</a></li>
+                        <li><a href="#" onclick="showReturnPolicy()">Returns</a></li>
+                        <li><a href="#" onclick="showShippingInfo()">Shipping Info</a></li>
+                        <li><a href="#" onclick="showFAQ()">FAQ</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
-                    <h3>Follow Us</h3>
-                    <div class="footer-social">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                    </div>
+                    <h4>Newsletter</h4>
+                    <p>Subscribe for updates & offers</p>
+                    <form class="newsletter-form" id="newsletterForm">
+                        <input type="email" placeholder="Your email" required>
+                        <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                    </form>
                 </div>
             </div>
             <div class="footer-bottom">
@@ -482,17 +276,418 @@
     </footer>
 
     <!-- Floating WhatsApp Button -->
-    <div class="floating-whatsapp">
-        <a href="https://wa.me/917038979754?text=Hello%20NutsSphere!%20I%20would%20like%20to%20know%20more%20about%20your%20premium%20superfoods." target="_blank" class="whatsapp-float">
-            <i class="fab fa-whatsapp"></i>
-            <span class="whatsapp-tooltip">Chat with us!</span>
-        </a>
+    <a href="https://wa.me/917038979754?text=Hello%20NutsSphere!" target="_blank" class="whatsapp-float">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Shopping Cart Sidebar -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3><i class="fas fa-shopping-cart"></i> Shopping Cart</h3>
+            <button class="close-cart" onclick="toggleCart()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <!-- Cart items dynamically added -->
+        </div>
+        <div class="cart-footer">
+            <div class="cart-summary">
+                <div class="summary-row">
+                    <span>Subtotal:</span>
+                    <span id="cartSubtotal">₹0</span>
+                </div>
+                <div class="summary-row">
+                    <span>Shipping:</span>
+                    <span id="cartShipping">FREE</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total:</span>
+                    <span id="cartTotal">₹0</span>
+                </div>
+            </div>
+            <button class="btn btn-primary btn-block" onclick="proceedToCheckout()">
+                <i class="fas fa-lock"></i> Proceed to Checkout
+            </button>
+        </div>
+    </div>
+    <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+
+    <!-- Login/Register Modal -->
+    <div class="modal" id="authModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeAuthModal()">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="auth-tabs">
+                <button class="auth-tab active" data-tab="login">Login</button>
+                <button class="auth-tab" data-tab="register">Register</button>
+            </div>
+            <div class="auth-content">
+                <!-- Login Form -->
+                <form class="auth-form active" id="loginForm" data-form="login">
+                    <h3>Welcome Back!</h3>
+                    <div class="form-group">
+                        <label for="loginEmail"><i class="fas fa-envelope"></i> Email</label>
+                        <input type="email" id="loginEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword"><i class="fas fa-lock"></i> Password</label>
+                        <input type="password" id="loginPassword" required>
+                    </div>
+                    <div class="form-options">
+                        <label class="checkbox">
+                            <input type="checkbox"> Remember me
+                        </label>
+                        <a href="#" class="forgot-password">Forgot Password?</a>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Login</button>
+                    <div class="auth-divider">OR</div>
+                    <button type="button" class="btn btn-google">
+                        <i class="fab fa-google"></i> Continue with Google
+                    </button>
+                </form>
+
+                <!-- Register Form -->
+                <form class="auth-form" id="registerForm" data-form="register">
+                    <h3>Create Account</h3>
+                    <div class="form-group">
+                        <label for="registerName"><i class="fas fa-user"></i> Full Name</label>
+                        <input type="text" id="registerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerEmail"><i class="fas fa-envelope"></i> Email</label>
+                        <input type="email" id="registerEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPhone"><i class="fas fa-phone"></i> Phone Number</label>
+                        <input type="tel" id="registerPhone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPassword"><i class="fas fa-lock"></i> Password</label>
+                        <input type="password" id="registerPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerConfirmPassword"><i class="fas fa-lock"></i> Confirm Password</label>
+                        <input type="password" id="registerConfirmPassword" required>
+                    </div>
+                    <label class="checkbox">
+                        <input type="checkbox" required> I agree to Terms & Conditions
+                    </label>
+                    <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div class="modal" id="checkoutModal">
+        <div class="modal-content checkout-modal-content">
+            <button class="modal-close" onclick="closeCheckoutModal()">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="checkout-container">
+                <div class="checkout-steps">
+                    <div class="step active" data-step="1">
+                        <div class="step-number">1</div>
+                        <div class="step-label">Shipping</div>
+                    </div>
+                    <div class="step" data-step="2">
+                        <div class="step-number">2</div>
+                        <div class="step-label">Payment</div>
+                    </div>
+                    <div class="step" data-step="3">
+                        <div class="step-number">3</div>
+                        <div class="step-label">Confirm</div>
+                    </div>
+                </div>
+
+                <div class="checkout-content">
+                    <!-- Step 1: Shipping Address -->
+                    <div class="checkout-step active" id="checkoutStep1">
+                        <h3>Shipping Address</h3>
+                        <form id="shippingForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="shipName">Full Name *</label>
+                                    <input type="text" id="shipName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="shipPhone">Phone Number *</label>
+                                    <input type="tel" id="shipPhone" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="shipAddress">Street Address *</label>
+                                <input type="text" id="shipAddress" required>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="shipCity">City *</label>
+                                    <input type="text" id="shipCity" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="shipState">State *</label>
+                                    <input type="text" id="shipState" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="shipPincode">Pincode *</label>
+                                    <input type="text" id="shipPincode" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="shipCountry">Country *</label>
+                                    <input type="text" id="shipCountry" value="India" required>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-primary" onclick="nextCheckoutStep(2)">
+                                Continue to Payment <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Step 2: Payment Method -->
+                    <div class="checkout-step" id="checkoutStep2">
+                        <h3>Payment Method</h3>
+                        <div class="payment-methods">
+                            <label class="payment-option">
+                                <input type="radio" name="paymentMethod" value="cod" checked>
+                                <div class="payment-card">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                    <span>Cash on Delivery</span>
+                                </div>
+                            </label>
+                            <label class="payment-option">
+                                <input type="radio" name="paymentMethod" value="upi">
+                                <div class="payment-card">
+                                    <i class="fas fa-qrcode"></i>
+                                    <span>UPI</span>
+                                </div>
+                            </label>
+                            <label class="payment-option">
+                                <input type="radio" name="paymentMethod" value="card">
+                                <div class="payment-card">
+                                    <i class="fas fa-credit-card"></i>
+                                    <span>Credit/Debit Card</span>
+                                </div>
+                            </label>
+                            <label class="payment-option">
+                                <input type="radio" name="paymentMethod" value="netbanking">
+                                <div class="payment-card">
+                                    <i class="fas fa-university"></i>
+                                    <span>Net Banking</span>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="payment-details" id="paymentDetails">
+                            <!-- Payment method specific fields will appear here -->
+                        </div>
+                        <div class="checkout-actions">
+                            <button class="btn btn-outline" onclick="nextCheckoutStep(1)">
+                                <i class="fas fa-arrow-left"></i> Back
+                            </button>
+                            <button class="btn btn-primary" onclick="nextCheckoutStep(3)">
+                                Continue <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Order Confirmation -->
+                    <div class="checkout-step" id="checkoutStep3">
+                        <h3>Confirm Your Order</h3>
+                        <div class="order-review">
+                            <div class="review-section">
+                                <h4>Shipping Address</h4>
+                                <div id="reviewShipping"></div>
+                            </div>
+                            <div class="review-section">
+                                <h4>Order Summary</h4>
+                                <div id="reviewItems"></div>
+                            </div>
+                            <div class="review-section">
+                                <h4>Payment Method</h4>
+                                <div id="reviewPayment"></div>
+                            </div>
+                            <div class="order-total-review">
+                                <div class="total-row">
+                                    <span>Subtotal:</span>
+                                    <span id="reviewSubtotal">₹0</span>
+                                </div>
+                                <div class="total-row">
+                                    <span>Shipping:</span>
+                                    <span id="reviewShippingCost">FREE</span>
+                                </div>
+                                <div class="total-row grand-total">
+                                    <span>Grand Total:</span>
+                                    <span id="reviewGrandTotal">₹0</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="checkout-actions">
+                            <button class="btn btn-outline" onclick="nextCheckoutStep(2)">
+                                <i class="fas fa-arrow-left"></i> Back
+                            </button>
+                            <button class="btn btn-success" onclick="placeOrder()">
+                                <i class="fas fa-check-circle"></i> Place Order
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Summary Sidebar -->
+                <div class="checkout-summary">
+                    <h4>Order Summary</h4>
+                    <div id="checkoutSummaryItems"></div>
+                    <div class="checkout-totals">
+                        <div class="total-row">
+                            <span>Subtotal:</span>
+                            <span id="checkoutSubtotal">₹0</span>
+                        </div>
+                        <div class="total-row">
+                            <span>Shipping:</span>
+                            <span id="checkoutShipping">FREE</span>
+                        </div>
+                        <div class="total-row grand">
+                            <span>Total:</span>
+                            <span id="checkoutTotal">₹0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Dashboard Modal -->
+    <div class="modal" id="dashboardModal">
+        <div class="modal-content dashboard-modal-content">
+            <button class="modal-close" onclick="closeDashboardModal()">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="dashboard-container">
+                <div class="dashboard-sidebar">
+                    <div class="dashboard-user">
+                        <i class="fas fa-user-circle"></i>
+                        <h3 id="dashUserName">Guest User</h3>
+                        <p id="dashUserEmail">guest@example.com</p>
+                    </div>
+                    <ul class="dashboard-menu">
+                        <li class="active" data-tab="orders">
+                            <i class="fas fa-box"></i> My Orders
+                        </li>
+                        <li data-tab="profile">
+                            <i class="fas fa-user"></i> Profile
+                        </li>
+                        <li data-tab="addresses">
+                            <i class="fas fa-map-marker-alt"></i> Addresses
+                        </li>
+                        <li data-tab="wishlist">
+                            <i class="fas fa-heart"></i> Wishlist
+                        </li>
+                        <li onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </li>
+                    </ul>
+                </div>
+                <div class="dashboard-content">
+                    <!-- Orders Tab -->
+                    <div class="dashboard-tab active" id="ordersTab">
+                        <h3>My Orders</h3>
+                        <div id="ordersList">
+                            <!-- Orders will be dynamically loaded -->
+                        </div>
+                    </div>
+
+                    <!-- Profile Tab -->
+                    <div class="dashboard-tab" id="profileTab">
+                        <h3>My Profile</h3>
+                        <form id="profileForm">
+                            <div class="form-group">
+                                <label for="profileName">Full Name</label>
+                                <input type="text" id="profileName">
+                            </div>
+                            <div class="form-group">
+                                <label for="profileEmail">Email</label>
+                                <input type="email" id="profileEmail">
+                            </div>
+                            <div class="form-group">
+                                <label for="profilePhone">Phone</label>
+                                <input type="tel" id="profilePhone">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Update Profile</button>
+                        </form>
+                    </div>
+
+                    <!-- Addresses Tab -->
+                    <div class="dashboard-tab" id="addressesTab">
+                        <h3>Saved Addresses</h3>
+                        <div id="addressesList">
+                            <!-- Addresses will be dynamically loaded -->
+                        </div>
+                        <button class="btn btn-outline" onclick="showAddAddressForm()">
+                            <i class="fas fa-plus"></i> Add New Address
+                        </button>
+                    </div>
+
+                    <!-- Wishlist Tab -->
+                    <div class="dashboard-tab" id="wishlistTab">
+                        <h3>My Wishlist</h3>
+                        <div id="wishlistItems">
+                            <!-- Wishlist items will be dynamically loaded -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Tracking Modal -->
+    <div class="modal" id="orderTrackingModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeOrderTrackingModal()">
+                <i class="fas fa-times"></i>
+            </button>
+            <h3>Track Your Order</h3>
+            <form id="trackingForm">
+                <div class="form-group">
+                    <label for="trackingOrderId">Order ID</label>
+                    <input type="text" id="trackingOrderId" placeholder="Enter your order ID" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Track Order</button>
+            </form>
+            <div id="trackingResult" class="tracking-result">
+                <!-- Tracking information will be displayed here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Quick View Modal -->
+    <div class="modal" id="quickViewModal">
+        <div class="modal-content product-modal-content">
+            <button class="modal-close" onclick="closeQuickView()">
+                <i class="fas fa-times"></i>
+            </button>
+            <div id="quickViewContent">
+                <!-- Product details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage"></span>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loader"></div>
     </div>
 
     <!-- Back to Top Button -->
-    <div class="back-to-top" id="backToTop">
-        <i class="fas fa-chevron-up"></i>
-    </div>
+    <button class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </button>
 
     <script src="script.js"></script>
 </body>

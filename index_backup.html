@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="NutsSphere - Premium organic nuts, seeds, dried fruits and superfoods. High quality, lab-tested, eco-friendly packaging. Your trusted source for healthy nutrition.">
+    <meta name="keywords" content="organic nuts, superfoods, premium seeds, dried fruits, healthy snacks, nutrition">
+    <meta name="author" content="NutsSphere">
+    <title>NutsSphere - A Sphere of Superfoods | Premium Organic Nuts & Seeds</title>
+    <link rel="icon" type="image/png" href="images/final_nutsphere_logo_01-removebg-preview.png">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-logo" onclick="window.location.href='#home'">
+                <img src="images/final_nutsphere_logo_01-removebg-preview.png" alt="NutsSphere Logo" class="logo">
+                <span class="brand-name">NutsSphere</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link">Home</a></li>
+                <li><a href="#products" class="nav-link">Shop</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+                <li><a href="javascript:void(0)" class="nav-link" onclick="showAccountMenu()">
+                    <i class="fas fa-user"></i> <span id="navUserName">Account</span>
+                </a></li>
+                <li><a href="javascript:void(0)" class="nav-link cart-icon" onclick="toggleCart()">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count" id="cartCount">0</span>
+                </a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Account Menu Dropdown -->
+    <div class="account-dropdown" id="accountDropdown">
+        <div class="account-menu-content">
+            <div class="account-menu-user" id="accountMenuUser">
+                <i class="fas fa-user-circle"></i>
+                <span id="accountUserName">Guest</span>
+            </div>
+            <div class="account-menu-items" id="accountMenuItems">
+                <!-- Dynamic content loaded by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <div class="hero-text animate-slide-up">
+                <h1 class="hero-title">
+                <span class="title-word" data-delay="0">Nuts</span><span class="title-word" data-delay="200">Sphere</span>
+            </h1>
+            <p class="hero-subtitle">
+                <span class="subtitle-text">A Sphere of</span>
+                <span class="rotating-words">
+                    <span class="word active">Superfoods</span>
+                    <span class="word">Nutrition</span>
+                    <span class="word">Wellness</span>
+                    <span class="word">Quality</span>
+                </span>
+            </p>
+            <p class="hero-description fade-in-up">Discover nature's finest nuts, seeds, dried fruits, and superfoods. Premium quality, organic, and nutrient-rich for a healthier you.</p>
+            <div class="hero-buttons">
+                <a href="#products" class="btn btn-primary pulse-btn">
+                    <i class="fas fa-shopping-cart"></i>
+                    Shop Now
+                </a>
+                <a href="#about" class="btn btn-secondary glow-btn">
+                    <i class="fas fa-play-circle"></i>
+                    Learn More
+                </a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <span class="stat-number" data-target="10000">0</span>
+                    <span class="stat-label">Happy Customers</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-target="500">0</span>
+                    <span class="stat-label">Premium Products</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-target="15">0</span>
+                    <span class="stat-label">Years Experience</span>
+                </div>
+            </div>
+        </div>
+        <div class="hero-image">
+            <div class="floating-nuts">
+                <div class="floating-nut nut-1">🥜</div>
+                <div class="floating-nut nut-2">🌰</div>
+                <div class="floating-nut nut-3">🥥</div>
+                <div class="floating-nut nut-4">🌾</div>
+                <div class="floating-nut nut-5">🫘</div>
+            </div>
+            <div class="hero-bg-overlay"></div>
+        </div>
+        <div class="scroll-indicator">
+            <div class="scroll-arrow">
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">What is NutsSphere?</h2>
+                <p class="section-subtitle">Your gateway to premium superfoods and natural nutrition</p>
+            </div>
+            <div class="about-content">
+                <div class="about-text">
+                    <div class="about-item">
+                        <h3><i class="fas fa-eye"></i> Our Vision</h3>
+                        <p>To become the world's most trusted source of premium superfoods, empowering people to live healthier lives through nature's finest offerings.</p>
+                    </div>
+                    <div class="about-item">
+                        <h3><i class="fas fa-heart"></i> Our Mission</h3>
+                        <p>We are committed to sourcing, processing, and delivering the highest quality nuts, seeds, dried fruits, and superfoods while supporting sustainable farming practices and fair trade.</p>
+                    </div>
+                </div>
+                <div class="about-image">
+                    <div class="about-img-placeholder">
+                        <i class="fas fa-seedling"></i>
+                        <p>Premium Quality Superfoods</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="products" class="products">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Our Premium Products</h2>
+                <p class="section-subtitle">Premium dry fruits, nuts, seeds & superfoods - Responsibly sourced and hygienically packed</p>
+                <div class="product-tagline">
+                    <span class="tagline-highlight">"Pure Goodness in Every Bite"</span>
+                    <p class="quality-text">100% Premium Quality • Hygienically Packed • "Open Seal With Purity"</p>
+                </div>
+            </div>
+            <div class="products-grid">
+                <div class="product-card" data-category="nuts">
+                    <div class="product-image">
+                        <img src="images/IMG-20250807-WA0011.jpg" alt="Roasted Pistachios" class="product-img">
+                    </div>
+                    <div class="product-content">
+                        <div class="product-overlay">
+                            <div class="product-badges">
+                                <span class="badge organic">100% Premium Quality</span>
+                                <span class="badge premium">Roasted</span>
+                            </div>
+                        </div>
+                        <h3 class="product-title">Roasted Pistachios</h3>
+                        <p class="product-description">Premium quality roasted pistachios, responsibly sourced and hygienically packed. Pure goodness in every bite.</p>
+                        <div class="product-price">
+                            <span class="current-price">₹899</span>
+                            <span class="original-price">₹999</span>
+                            <span class="discount">10% OFF</span>
+                        </div>
+                        <div class="product-quantity">
+                            <label>Quantity:</label>
+                            <select class="quantity-select" id="qty-pistachios">
+                                <option value="250g">250g - ₹899</option>
+                                <option value="500g">500g - ₹1699</option>
+                                <option value="1kg">1kg - ₹3199</option>
+                            </select>
+                        </div>
+                        <div class="product-features">
+                            <span class="feature-tag">High Protein</span>
+                            <span class="feature-tag">Premium Quality</span>
+                        </div>
+                        <button class="add-to-cart-btn" onclick="addToCart('pistachios', 'Roasted Pistachios', 899, 'images/IMG-20250807-WA0011.jpg')">
+                            <i class="fas fa-shopping-cart"></i>
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+                <div class="product-card" data-category="nuts">
+                    <div class="product-image">
+                        <img src="images/IMG-20250807-WA0013.jpg" alt="California Almonds" class="product-img">
+                    </div>
+                    <div class="product-content">
+                        <div class="product-overlay">
+                            <div class="product-badges">
+                                <span class="badge organic">100% Premium Quality</span>
+                                <span class="badge superfood">California</span>
+                            </div>
+                        </div>
+                        <h3 class="product-title">California Almonds</h3>
+                        <p class="product-description">Premium dry fruits, nuts, seeds & superfoods, responsibly sourced and hygienically packed. Pure goodness in every bite.</p>
+                        <div class="product-price">
+                            <span class="current-price">₹749</span>
+                            <span class="original-price">₹849</span>
+                            <span class="discount">12% OFF</span>
+                        </div>
+                        <div class="product-quantity">
+                            <label>Quantity:</label>
+                            <select class="quantity-select" id="qty-almonds">
+                                <option value="250g">250g - ₹749</option>
+                                <option value="500g">500g - ₹1399</option>
+                                <option value="1kg">1kg - ₹2699</option>
+                            </select>
+                        </div>
+                        <div class="product-features">
+                            <span class="feature-tag">High Protein</span>
+                            <span class="feature-tag">Heart Healthy</span>
+                        </div>
+                        <button class="add-to-cart-btn" onclick="addToCart('almonds', 'California Almonds', 749, 'images/IMG-20250807-WA0013.jpg')">
+                            <i class="fas fa-shopping-cart"></i>
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+                <div class="product-card" data-category="berries">
+                    <div class="product-image">
+                        <img src="images/IMG-20250807-WA0014.jpg" alt="Black Raisins" class="product-img">
+                    </div>
+                    <div class="product-content">
+                        <div class="product-overlay">
+                            <div class="product-badges">
+                                <span class="badge natural">100% Premium Quality</span>
+                                <span class="badge vitamin">Natural</span>
+                            </div>
+                        </div>
+                        <h3 class="product-title">Black Raisins</h3>
+                        <p class="product-description">Premium dry fruits, nuts, seeds & superfoods, responsibly sourced and hygienically packed. Pure goodness in every bite.</p>
+                        <div class="product-features">
+                            <span class="feature-tag">Antioxidants</span>
+                            <span class="feature-tag">Natural Iron</span>
+                        </div>
+                        <div class="product-pricing">
+                            <div class="price-variants">
+                                <div class="price-variant">
+                                    <span class="weight">250g</span>
+                                    <div class="price-info">
+                                        <span class="current-price">₹349</span>
+                                        <span class="original-price">₹399</span>
+                                        <span class="discount">13% off</span>
+                                    </div>
+                                </div>
+                                <div class="price-variant">
+                                    <span class="weight">500g</span>
+                                    <div class="price-info">
+                                        <span class="current-price">₹649</span>
+                                        <span class="original-price">₹749</span>
+                                        <span class="discount">13% off</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="product-actions">
+                                <div class="quantity-selector">
+                                    <button class="qty-btn" onclick="decreaseQuantity('black-raisins')">-</button>
+                                    <span class="qty-display" id="qty-black-raisins">1</span>
+                                    <button class="qty-btn" onclick="increaseQuantity('black-raisins')">+</button>
+                                </div>
+                                <button class="add-to-cart-btn" onclick="addToCart('black-raisins', 'Black Raisins', 349, 250)">
+                                    <i class="fas fa-shopping-cart"></i>
+                                    Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card" data-category="nuts">
+                    <div class="product-image">
+                        <img src="images/IMG-20250807-WA0016.jpg" alt="Whole Cashews" class="product-img">
+                    </div>
+                    <div class="product-content">
+                        <div class="product-overlay">
+                            <div class="product-badges">
+                                <span class="badge blend">100% Premium Quality</span>
+                                <span class="badge energy">Whole</span>
+                            </div>
+                        </div>
+                        <h3 class="product-title">Whole Cashews</h3>
+                        <p class="product-description">Premium dry fruits, nuts, seeds & superfoods, responsibly sourced and hygienically packed. Pure goodness in every bite.</p>
+                        <div class="product-features">
+                            <span class="feature-tag">High Protein</span>
+                            <span class="feature-tag">Healthy Fats</span>
+                        </div>
+                        <div class="product-pricing">
+                            <div class="price-variants">
+                                <div class="price-variant">
+                                    <span class="weight">250g</span>
+                                    <div class="price-info">
+                                        <span class="current-price">₹449</span>
+                                        <span class="original-price">₹499</span>
+                                        <span class="discount">10% off</span>
+                                    </div>
+                                </div>
+                                <div class="price-variant">
+                                    <span class="weight">500g</span>
+                                    <div class="price-info">
+                                        <span class="current-price">₹849</span>
+                                        <span class="original-price">₹949</span>
+                                        <span class="discount">11% off</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="product-actions">
+                                <div class="quantity-selector">
+                                    <button class="qty-btn" onclick="decreaseQuantity('whole-cashews')">-</button>
+                                    <span class="qty-display" id="qty-whole-cashews">1</span>
+                                    <button class="qty-btn" onclick="increaseQuantity('whole-cashews')">+</button>
+                                </div>
+                                <button class="add-to-cart-btn" onclick="addToCart('whole-cashews', 'Whole Cashews', 449, 250)">
+                                    <i class="fas fa-shopping-cart"></i>
+                                    Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card" data-category="nuts">
+                    <div class="product-image">
+                        <img src="images/IMG-20250807-WA0017.jpg" alt="Inshell Walnuts" class="product-img">
+                    </div>
+                    <div class="product-content">
+                        <div class="product-overlay">
+                            <div class="product-badges">
+                                <span class="badge organic">100% Premium Quality</span>
+                                <span class="badge premium">Inshell</span>
+                            </div>
+                        </div>
+                        <h3 class="product-title">Inshell Walnuts</h3>
+                        <p class="product-description">Premium dry fruits, nuts, seeds & superfoods, responsibly sourced and hygienically packed. Pure goodness in every bite.</p>
+                        <div class="product-features">
+                            <span class="feature-tag">Omega-3</span>
+                            <span class="feature-tag">Brain Health</span>
+                        </div>
+                        <div class="product-pricing">
+                            <div class="price-variants">
+                                <div class="price-variant">
+                                    <span class="weight">250g</span>
+                                    <div class="price-info">
+                                        <span class="current-price">₹399</span>
+                                        <span class="original-price">₹449</span>
+                                        <span class="discount">11% off</span>
+                                    </div>
+                                </div>
+                                <div class="price-variant">
+                                    <span class="weight">500g</span>
+                                    <div class="price-info">
+                                        <span class="current-price">₹749</span>
+                                        <span class="original-price">₹849</span>
+                                        <span class="discount">12% off</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="product-actions">
+                                <div class="quantity-selector">
+                                    <button class="qty-btn" onclick="decreaseQuantity('inshell-walnuts')">-</button>
+                                    <span class="qty-display" id="qty-inshell-walnuts">1</span>
+                                    <button class="qty-btn" onclick="increaseQuantity('inshell-walnuts')">+</button>
+                                </div>
+                                <button class="add-to-cart-btn" onclick="addToCart('inshell-walnuts', 'Inshell Walnuts', 399, 250)">
+                                    <i class="fas fa-shopping-cart"></i>
+                                    Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us Section -->
+    <section id="why-us" class="why-us">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Why Choose NutsSphere?</h2>
+                <p class="section-subtitle">Quality, sustainability, and nutrition in every package</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <h3 class="feature-title">100% Organic</h3>
+                    <p class="feature-description">All our products are certified organic, free from pesticides, chemicals, and artificial additives.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-dna"></i>
+                    </div>
+                    <h3 class="feature-title">Nutrient-Rich</h3>
+                    <p class="feature-description">Packed with essential vitamins, minerals, healthy fats, and plant-based proteins for optimal health.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-microscope"></i>
+                    </div>
+                    <h3 class="feature-title">Lab-Tested</h3>
+                    <p class="feature-description">Every batch undergoes rigorous quality testing to ensure purity, freshness, and nutritional value.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-recycle"></i>
+                    </div>
+                    <h3 class="feature-title">Eco-Packaging</h3>
+                    <p class="feature-description">Sustainable, recyclable packaging that protects your food while protecting our planet.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="testimonials">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">What Our Customers Say</h2>
+                <p class="section-subtitle">Real stories from happy customers</p>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <p class="testimonial-text">"NutsSphere has transformed my snacking habits! Their organic almonds and mixed nuts are incredibly fresh and delicious. I love knowing I'm eating clean, healthy food."</p>
+                        <div class="testimonial-author">
+                            <div class="author-image">
+                                <i class="fas fa-user-circle"></i>
+                            </div>
+                            <div class="author-info">
+                                <h4 class="author-name">Sarah Johnson</h4>
+                                <p class="author-role">Health Enthusiast</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <p class="testimonial-text">"As a nutritionist, I recommend NutsSphere to all my clients. The quality is outstanding, and I appreciate their commitment to organic and sustainable practices."</p>
+                        <div class="testimonial-author">
+                            <div class="author-image">
+                                <i class="fas fa-user-circle"></i>
+                            </div>
+                            <div class="author-info">
+                                <h4 class="author-name">Dr. Michael Chen</h4>
+                                <p class="author-role">Certified Nutritionist</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <p class="testimonial-text">"The superfood mixes are my go-to for post-workout snacks. Great taste, perfect packaging, and the customer service is exceptional. Highly recommended!"</p>
+                        <div class="testimonial-author">
+                            <div class="author-image">
+                                <i class="fas fa-user-circle"></i>
+                            </div>
+                            <div class="author-info">
+                                <h4 class="author-name">Emily Rodriguez</h4>
+                                <p class="author-role">Fitness Coach</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="newsletter">
+        <div class="container">
+            <div class="newsletter-content">
+                <div class="newsletter-text">
+                    <h3>Stay Updated with NutsSphere</h3>
+                    <p>Get the latest updates on new products, health tips, and exclusive offers delivered to your inbox.</p>
+                </div>
+                <div class="newsletter-form">
+                    <form class="email-signup">
+                        <input type="email" placeholder="Enter your email address" required class="email-input">
+                        <button type="submit" class="btn btn-primary">Subscribe</button>
+                    </form>
+                    <p class="privacy-text">We respect your privacy. Unsubscribe at any time.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Get In Touch</h2>
+                <p class="section-subtitle">We'd love to hear from you</p>
+            </div>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <h3>Contact Information</h3>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>sohanankulwar@gmail.com</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <span>+91 7038979754</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Nanded, Maharashtra, India</span>
+                    </div>
+                    <div class="contact-item whatsapp-contact">
+                        <i class="fab fa-whatsapp"></i>
+                        <a href="https://wa.me/917038979754?text=Hello%20NutsSphere!%20I%20would%20like%20to%20know%20more%20about%20your%20premium%20superfoods." target="_blank" class="whatsapp-link">
+                            WhatsApp: +91 7038979754
+                        </a>
+                    </div>
+                    <div class="social-links">
+                        <h4>Follow Us</h4>
+                        <div class="social-icons">
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="https://wa.me/917038979754?text=Hello%20NutsSphere!%20I%20would%20like%20to%20know%20more%20about%20your%20premium%20superfoods." target="_blank" class="whatsapp-social">
+                                <i class="fab fa-whatsapp"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <form class="contact-form">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <img src="images/final_nutsphere_logo_01-removebg-preview.png" alt="NutsSphere Logo" class="footer-logo-img">
+                        <span class="footer-brand-name">NutsSphere</span>
+                    </div>
+                    <p class="footer-description">A Sphere of Superfoods - Your trusted source for premium organic nuts, seeds, and superfoods.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#products">Products</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Products</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Premium Nuts</a></li>
+                        <li><a href="#">Organic Seeds</a></li>
+                        <li><a href="#">Dried Berries</a></li>
+                        <li><a href="#">Superfood Mixes</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Follow Us</h3>
+                    <div class="footer-social">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 NutsSphere. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating WhatsApp Button -->
+    <div class="floating-whatsapp">
+        <a href="https://wa.me/917038979754?text=Hello%20NutsSphere!%20I%20would%20like%20to%20know%20more%20about%20your%20premium%20superfoods." target="_blank" class="whatsapp-float">
+            <i class="fab fa-whatsapp"></i>
+            <span class="whatsapp-tooltip">Chat with us!</span>
+        </a>
+    </div>
+
+    <!-- Back to Top Button -->
+    <div class="back-to-top" id="backToTop">
+        <i class="fas fa-chevron-up"></i>
+    </div>
+
+    <!-- Cart Modal -->
+    <div class="cart-overlay" onclick="toggleCart()"></div>
+    <div class="cart-modal" id="cartModal">
+        <div class="cart-header">
+            <h3>Shopping Cart</h3>
+            <button class="close-cart" onclick="toggleCart()">×</button>
+        </div>
+        <div class="cart-content">
+            <div class="cart-items" id="cartItems">
+                <p>Your cart is empty</p>
+            </div>
+            <div class="cart-total">
+                <div class="total-amount" id="totalAmount">₹0</div>
+                <button class="checkout-btn" onclick="proceedToCheckout()" id="checkoutBtn" disabled>
+                    Proceed to Checkout
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
